@@ -1,7 +1,7 @@
 {
   "name": "android-dev-tools",
-  "description": "Marketplace management tools for this repository. Includes update skill to sync marketplace.json with plugins.",
-  "version": "1.0.0",
+  "description": "All-in-one Android development toolkit. Includes: gradle-build-performance (build optimization), apply-remote-sign (APK remote signing), update-docs (documentation generation), and update (marketplace management).",
+  "version": "2.0.0",
   "author": {
     "name": "adzcsx2",
     "url": "https://github.com/adzcsx2"

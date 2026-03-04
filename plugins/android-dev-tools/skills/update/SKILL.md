@@ -1,128 +1,120 @@
 ---
 name: update
-description: Sync marketplace.json with plugins directory. Bump versions on changes, add/remove plugins, then commit and push.
+description: Sync marketplace.json with plugins directory, update both English and Chinese README files, then commit and push.
 ---
 
 # Marketplace Update Skill
 
-Automatically sync `.claude-plugin/marketplace.json` with the `plugins/` directory.
+Automatically sync `.claude-plugin/marketplace.json` with the `plugins/` directory and update README files.
 
 ## When to Use
 
-- After modifying any plugin in `plugins/` directory
-- After adding a new plugin
-- After removing a plugin
-- To release a new version of your marketplace
+- After modifying any skill in `plugins/` directory
+- To release a new version of the plugin
+- To sync English and Chinese documentation
 
 ## Trigger
 
 ```
-/plugin android-dev-tools:update
+/android-dev-tools:update
 ```
 
 ---
 
 ## Workflow
 
-### 1. Scan Plugins Directory
+### 1. Scan Skills Directory
 
+List all skills in the plugin:
 ```bash
-ls -1 plugins/
+ls -1 plugins/android-dev-tools/skills/
 ```
 
-For each plugin directory, read its `plugin.json`:
+For each skill, read its SKILL.md to get name and description.
+
+### 2. Detect Changes
+
+Check if any file changed since last commit:
 ```bash
-cat plugins/{plugin-name}/.claude-plugin/plugin.json
+git diff HEAD --name-only -- plugins/
 ```
 
-### 2. Compare with Marketplace.json
+If changes detected, determine version bump:
+- **Bug fix / minor update** → patch (+0.0.1): 1.0.0 → 1.0.1
+- **New skill / feature** → minor (+0.1.0): 1.0.0 → 1.1.0
+- **Breaking change** → major (+1.0.0): 1.0.0 → 2.0.0
 
-Read current marketplace.json:
-```bash
-cat .claude-plugin/marketplace.json
+### 3. Update plugin.json
+
+Update version in `plugins/android-dev-tools/.claude-plugin/plugin.json`.
+
+### 4. Update marketplace.json
+
+Update version in `.claude-plugin/marketplace.json`.
+
+### 5. Sync README Files
+
+**README.md (English)** - Update skills table:
+```markdown
+## Included Skills
+
+| Skill | Description |
+|-------|-------------|
+| `skill-name` | Description from SKILL.md |
+...
 ```
 
-Compare:
-- **New plugin found** → Add to marketplace.json with version from plugin.json
-- **Plugin removed** → Remove from marketplace.json
-- **Plugin modified** → Bump version (patch +1)
+**README_CN.md (Chinese)** - Sync with English version:
+- Translate any new content
+- Keep structure identical
+- Update skills table
 
-### 3. Detect Plugin Modifications
-
-For each plugin, check if any file changed since last commit:
-```bash
-git diff HEAD~1 --name-only -- plugins/{plugin-name}/
-```
-
-If changes detected, bump version:
-- Current: `1.2.3` → New: `1.2.4` (patch)
-- Or follow semver: major/minor/patch based on change type
-
-### 4. Update Marketplace.json
-
-Update the marketplace.json file:
-```json
-{
-  "name": "android-dev-tools",
-  "description": "...",
-  "owner": { ... },
-  "plugins": [
-    {
-      "name": "plugin-name",
-      "source": "./plugins/plugin-name",
-      "description": "from plugin.json",
-      "version": "bumped version"
-    }
-  ]
-}
-```
-
-### 5. Commit and Push
+### 6. Commit and Push
 
 ```bash
-git add .claude-plugin/marketplace.json
-git commit -m "chore: update marketplace - {changes summary}"
+git add -A
+git commit -m "chore: update plugin to v{version} - {changes summary}"
 git push
 ```
 
 ---
 
-## Version Bumping Rules
+## README Sync Rules
 
-| Change Type | Version Bump | Example |
-|-------------|--------------|---------|
-| Bug fix / minor update | patch (+0.0.1) | 1.0.0 → 1.0.1 |
-| New feature / skill | minor (+0.1.0) | 1.0.0 → 1.1.0 |
-| Breaking change | major (+1.0.0) | 1.0.0 → 2.0.0 |
-| New plugin added | use plugin.json version | - |
-| Plugin removed | just remove from list | - |
+When syncing README.md and README_CN.md:
+
+1. **Structure must match** - Same sections in same order
+2. **Skills table** - Update both English and Chinese versions
+3. **New skills** - Add to both files with translated description
+4. **Removed skills** - Remove from both files
+5. **Version number** - Update in both files
 
 ---
 
-## Execution Example
+## Example Execution
 
 ```bash
-# 1. List plugins
-PLUGINS=$(ls -1 plugins/)
+# 1. Check for changes
+CHANGES=$(git diff HEAD --name-only -- plugins/)
 
-# 2. For each plugin, get its info
-for plugin in $PLUGINS; do
-  if [ -f "plugins/$plugin/.claude-plugin/plugin.json" ]; then
-    NAME=$(cat "plugins/$plugin/.claude-plugin/plugin.json" | grep '"name"' | cut -d'"' -f4)
-    VERSION=$(cat "plugins/$plugin/.claude-plugin/plugin.json" | grep '"version"' | cut -d'"' -f4)
-    DESC=$(cat "plugins/$plugin/.claude-plugin/plugin.json" | grep '"description"' | cut -d'"' -f4)
-    echo "$NAME|$VERSION|$DESC"
-  fi
-done
+# 2. If changes exist, bump version
+if [ -n "$CHANGES" ]; then
+  # Read current version
+  CURRENT=$(cat plugins/android-dev-tools/.claude-plugin/plugin.json | grep '"version"' | cut -d'"' -f4)
+  
+  # Bump patch version
+  NEW_VERSION=$(echo $CURRENT | awk -F. '{$NF++;print}') 
+  
+  # Update plugin.json
+  # Update marketplace.json
+fi
 
-# 3. Check for changes
-git diff HEAD --name-only -- plugins/
+# 3. Update README files
+# Sync skills table between README.md and README_CN.md
 
-# 4. Update marketplace.json (use Edit tool)
-
-# 5. Commit and push
-git add .claude-plugin/marketplace.json
-git commit -m "chore: update marketplace"
+# 4. Commit and push
+git add -A
+git commit -m "chore: update to v$NEW_VERSION"
 git push
 ```
 
@@ -132,5 +124,5 @@ git push
 
 1. Always run from the marketplace root directory
 2. Ensure git is configured with push access
-3. Plugin directories must have `.claude-plugin/plugin.json`
+3. Keep README.md and README_CN.md synchronized
 4. Version format: semver (major.minor.patch)

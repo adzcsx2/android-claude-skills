@@ -91,8 +91,8 @@ python scripts/build.py assembleDebug
 当用户调用此 skill 时，执行以下 Python 脚本：
 
 ```bash
-# 工具路径（skill 内置）
-TOOL_PATH="$HOME/.claude/skills/apply-remote-sign/AndroidAutoRemoteSignTool"
+# 工具路径（插件内置）
+TOOL_PATH="$HOME/.claude/plugins/android-dev-tools/AndroidAutoRemoteSignTool"
 
 # 基本命令
 python "${TOOL_PATH}/remote_sign/apply_remote_sign.py" --project-path "{project_path}"

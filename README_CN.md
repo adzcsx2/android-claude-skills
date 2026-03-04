@@ -1,0 +1,143 @@
+# Android 开发工具 - Claude Code 插件
+
+[English](./README.md)
+
+一站式 Android 开发工具集。安装一次，拥有全部功能。
+
+## 包含的 Skills
+
+| Skill | 描述 |
+|-------|------|
+| `gradle-build-performance` | 调试和优化 Gradle 构建性能 |
+| `apply-remote-sign` | 自动配置远程 APK 签名 |
+| `update-docs` | 生成中文技术文档 |
+| `update` | 同步 marketplace.json 和 README 文件 |
+
+---
+
+## gradle-build-performance
+
+调试和优化 Android/Gradle 构建性能。
+
+**功能：**
+- 分析 Gradle 构建扫描
+- 识别配置与执行阶段瓶颈
+- 启用配置缓存
+- 优化 CI/CD 构建时间
+- 调试 kapt/KSP 注解处理
+
+**用法：** `/android-dev-tools:gradle-build-performance`
+
+---
+
+## apply-remote-sign
+
+为 Android 项目自动配置远程 APK 签名。
+
+**功能：**
+- 支持 Groovy DSL (`build.gradle`) 和 Kotlin DSL (`build.gradle.kts`)
+- 创建 `.env.example` 模板
+- 更新 `.gitignore` 和 `gradle.properties`
+- 集成签名任务到构建脚本
+- 内置 AndroidAutoRemoteSignTool 工具
+
+**用法：**
+```bash
+/android-dev-tools:apply-remote-sign [项目路径] [--modules 模块1,模块2]
+```
+
+---
+
+## update-docs
+
+为 Android 项目自动生成中文技术文档。
+
+**功能：**
+- 分析项目结构
+- 生成界面文档（控件、功能说明）
+- 文档化导航流程（Activity-Fragment 关系）
+- 列出四大组件（Activity、Service、Receiver、Provider）
+- 文档化通知渠道和 API 接口
+- 支持增量更新
+
+**用法：**
+```bash
+/android-dev-tools:update-docs [--force] [--dry-run] [interfaces|navigation|components|notifications|api]
+```
+
+---
+
+## update
+
+同步 marketplace.json 与插件目录，并更新 README 文件。
+
+**功能：**
+- 扫描插件目录变更
+- 插件修改时自动升级版本号
+- 添加/移除插件到 marketplace.json
+- 同步中英文 README 文件
+- 提交并推送到远程
+
+**用法：** `/android-dev-tools:update`
+
+---
+
+## 安装
+
+```bash
+# 1. 添加 marketplace
+/plugin marketplace add github.com/adzcsx2/claude_skill
+
+# 2. 安装（包含所有 skills）
+/plugin install android-dev-tools@android-dev-tools
+```
+
+---
+
+## 仓库结构
+
+```
+claude_skill/
+├── .claude-plugin/
+│   └── marketplace.json
+├── plugins/
+│   └── android-dev-tools/
+│       ├── .claude-plugin/
+│       │   └── plugin.json
+│       ├── AndroidAutoRemoteSignTool/   # 内置工具
+│       │   └── remote_sign/
+│       │       ├── apply_remote_sign.py
+│       │       ├── apply_groovy_sign.py
+│       │       ├── apply_kts_sign.py
+│       │       └── ...
+│       └── skills/
+│           ├── gradle-build-performance/
+│           │   └── SKILL.md
+│           ├── apply-remote-sign/
+│           │   └── SKILL.md
+│           ├── update-docs/
+│           │   └── SKILL.md
+│           └── update/
+│               └── SKILL.md
+├── README.md            # 英文
+├── README_CN.md         # 中文
+└── .gitignore
+```
+
+---
+
+## 环境要求
+
+- Claude Code CLI
+- `apply-remote-sign` 需要：Python 3.6+、`requests` 库、JDK 11、Android SDK
+- `update-docs` 需要：标准结构的 Android 项目
+
+---
+
+## 许可证
+
+MIT
+
+## 作者
+
+[adzcsx2](https://github.com/adzcsx2)
