@@ -570,7 +570,7 @@ def _fix_signing_config_refs(content: str, project_root: Path, module_name: str)
 
 
 def _ensure_debug_signing_config(content: str) -> str:
-    """确保 signingConfigs 块中包含 debug 配置。"""
+    """替换整个 signingConfigs 块为只使用系统 debug.keystore。"""
     android_idx = content.find("android {")
     if android_idx == -1:
         android_idx = content.find("android{")
@@ -578,34 +578,46 @@ def _ensure_debug_signing_config(content: str) -> str:
         log("ERROR", "未找到 android 块")
         return content
 
+    # 先删除旧的签名配置注释
+    content = re.sub(r'\n?[ \t]*//\s*签名信息[^\n]*\n', '\n', content)
+
     signingconfigs_idx = content.find("signingConfigs {", android_idx)
     if signingconfigs_idx == -1:
         signingconfigs_idx = content.find("signingConfigs{", android_idx)
-    if signingconfigs_idx == -1:
-        return content
 
-    sc_end = _find_block_end(content, signingconfigs_idx)
-    if sc_end == -1:
-        return content
-
-    sc_block = content[signingconfigs_idx:sc_end]
-
-    # 检查是否已有 debug 配置
-    if 'create("debug")' in sc_block or "getByName(\"debug\")" in sc_block:
-        return content
-
-    # 在 signingConfigs { 后插入 debug 配置
-    insert_pos = content.find("{", signingconfigs_idx) + 1
-    debug_config = '''
+    # 新的 signingConfigs 块（只包含系统 debug.keystore）
+    new_signingconfigs = '''    //签名信息（使用系统默认 debug.keystore）
+    signingConfigs {
         getByName("debug") {
             storeFile = File(System.getProperty("user.home") + "/.android/debug.keystore")
             storePassword = "android"
             keyAlias = "androiddebugkey"
             keyPassword = "android"
         }
-'''
-    content = content[:insert_pos] + debug_config + content[insert_pos:]
-    log("INFO", "添加 debug 签名配置")
+    }'''
+
+    if signingconfigs_idx != -1:
+        # 找到 signingConfigs 块的结束位置
+        sc_end = _find_block_end(content, signingconfigs_idx)
+        if sc_end == -1:
+            return content
+
+        # 替换整个 signingConfigs 块
+        content = content[:signingconfigs_idx] + new_signingconfigs + content[sc_end:]
+        log("INFO", "已替换 signingConfigs 块为系统 debug.keystore 配置")
+    else:
+        # 如果没有 signingConfigs 块，在 android 块内添加
+        # 找到 defaultConfig 块后添加
+        defaultconfig_idx = content.find("defaultConfig {", android_idx)
+        if defaultconfig_idx == -1:
+            defaultconfig_idx = content.find("defaultConfig{", android_idx)
+
+        if defaultconfig_idx != -1:
+            dc_end = _find_block_end(content, defaultconfig_idx)
+            if dc_end != -1:
+                content = content[:dc_end] + "\n" + new_signingconfigs + content[dc_end:]
+                log("INFO", "已添加 signingConfigs 块（系统 debug.keystore 配置）")
+
     return content
 
 

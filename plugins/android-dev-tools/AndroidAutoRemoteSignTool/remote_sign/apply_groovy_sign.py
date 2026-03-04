@@ -511,7 +511,10 @@ afterEvaluate {
         # 在插入点后插入 lintOptions/aaptOptions/packagingOptions
         content = content[:vb_end] + lint_options_code + content[vb_end:]
 
-        # 3. 确保 signingConfigs 中有 debug 配置，并替换不存在的 keystore 引用
+        # 3. 替换整个 signingConfigs 块为只使用系统 debug.keystore
+        # 先删除旧的签名配置注释（如 "//签名信息"）
+        content = re.sub(r'\n?[ \t]*//\s*签名信息[^\n]*\n', '\n', content)
+
         signingconfigs_idx = content.find("signingConfigs {", android_idx)
         if signingconfigs_idx != -1:
             # 找到 signingConfigs 块的结束位置
@@ -528,77 +531,50 @@ afterEvaluate {
                         sc_end = i + 1
                         break
 
-            # 检查是否已存在 debug 配置
-            signingconfigs_block_content = content[signingconfigs_idx:sc_end]
-            if "debug {" not in signingconfigs_block_content:
-                # 在 signingConfigs 块的开头插入 debug 配置
-                insert_pos = content.find("{", signingconfigs_idx) + 1
-                debug_config = """
+            # 替换整个 signingConfigs 块为只包含系统 debug.keystore 的配置
+            new_signingconfigs = """    //签名信息（使用系统默认 debug.keystore）
+    signingConfigs {
         debug {
             storeFile file("${System.getProperty('user.home')}/.android/debug.keystore")
             storePassword "android"
             keyAlias "androiddebugkey"
             keyPassword "android"
         }
-"""
-                content = content[:insert_pos] + debug_config + content[insert_pos:]
+    }"""
+            content = content[:signingconfigs_idx] + new_signingconfigs + content[sc_end:]
+            log("INFO", "已替换 signingConfigs 块为系统 debug.keystore 配置")
+        else:
+            # 如果没有 signingConfigs 块，在 android 块内添加
+            # 找到合适的位置（通常在 defaultConfig 之后）
+            defaultconfig_end = content.find("defaultConfig {", android_idx)
+            if defaultconfig_end != -1:
+                # 找到 defaultConfig 块的结束位置
+                brace_count = 0
+                start_found = False
+                dc_end = 0
+                for i in range(defaultconfig_end, len(content)):
+                    if content[i] == '{':
+                        start_found = True
+                        brace_count += 1
+                    elif content[i] == '}':
+                        brace_count -= 1
+                        if start_found and brace_count == 0:
+                            dc_end = i + 1
+                            break
 
-            # 检查并替换引用不存在 keystore 的配置
-            # 收集所有签名配置名称
-            import re
-            config_names = re.findall(r'(\w+)\s*\{', signingconfigs_block_content)
-            # 过滤掉非配置名称的关键词
-            config_names = [n for n in config_names if n not in ['signingConfigs']]
+                new_signingconfigs = """
 
-            log("INFO", f"找到的签名配置: {config_names}")
-
-            # 对每个非 debug 配置，检查其 keystore 是否存在
-            for config_name in config_names:
-                if config_name == "debug":
-                    continue
-
-                # 查找该配置块内的 storeFile
-                # 匹配格式: configName { ... storeFile file('path') ... }
-                config_block_pattern = rf'{re.escape(config_name)}\s+\{{([^}}]+?)\}}'
-                config_match = re.search(config_block_pattern, signingconfigs_block_content, re.DOTALL)
-                log("INFO", f"  配置 {config_name} 块匹配: {config_match is not None}")
-
-                if config_match:
-                    config_block = config_match.group(1)
-                    # 在配置块内查找 storeFile
-                    # 匹配格式: storeFile file('path') 或 storeFile file("path")
-                    storefile_match = re.search(r'storeFile\s+file\s*\(([\'"])([^\1]+?)\1\)', config_block)
-                    log("INFO", f"  配置 {config_name} storeFile 匹配: {storefile_match}")
-
-                    if storefile_match:
-                        keystore_path = storefile_match.group(2).strip()
-                        log("INFO", f"  Keystore 路径: {keystore_path}")
-
-                        # 检查 keystore 是否存在
-                        keystore_exists = False
-                        # 尝试绝对路径
-                        test_path = Path(keystore_path)
-                        if test_path.exists():
-                            keystore_exists = True
-                        # 尝试相对于 app 目录的路径
-                        else:
-                            app_dir = project_root / "app"
-                            test_path = app_dir / keystore_path
-                            if test_path.exists():
-                                keystore_exists = True
-                            # 尝试相对于项目根目录的路径
-                            else:
-                                test_path = project_root / keystore_path
-                                if test_path.exists():
-                                    keystore_exists = True
-
-                        if not keystore_exists:
-                            # 替换所有对该配置的引用为 debug
-                            old_pattern = f"signingConfig signingConfigs.{config_name}"
-                            new_pattern = "signingConfig signingConfigs.debug"
-                            if old_pattern in content:
-                                content = content.replace(old_pattern, new_pattern)
-                                log("INFO", f"将不存在的签名配置 '{config_name}' 替换为 'debug'")
+    //签名信息（使用系统默认 debug.keystore）
+    signingConfigs {
+        debug {
+            storeFile file("${System.getProperty('user.home')}/.android/debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+    }"""
+                content = content[:dc_end] + new_signingconfigs + content[dc_end:]
+                log("INFO", "已添加 signingConfigs 块（系统 debug.keystore 配置）")
 
         # 4. 在 buildType 中添加 signingConfig（通用处理）
 
