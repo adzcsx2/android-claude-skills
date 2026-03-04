@@ -1,6 +1,6 @@
 {
   "name": "android-dev-tools",
-  "description": "Android development tools for Claude Code - build performance, remote signing, and documentation generation",
+  "description": "Android development tools for Claude Code - build performance, remote signing, documentation generation, and marketplace management",
   "owner": {
     "name": "adzcsx2",
     "url": "https://github.com/adzcsx2"
@@ -9,7 +9,7 @@
     {
       "name": "android-dev-tools",
       "source": "./plugins/android-dev-tools",
-      "description": "Marketplace management tools. Includes update skill to sync marketplace.json with plugins directory.",
+      "description": "Marketplace management tools. Includes install-all to install all plugins, and update to sync marketplace.json.",
       "version": "1.0.0"
     },
     {

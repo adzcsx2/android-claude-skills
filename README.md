@@ -8,9 +8,21 @@ Android development tools for Claude Code. This marketplace contains plugins for
 
 Marketplace management tools for this repository.
 
-**Usage:** `/plugin android-dev-tools:update`
+**Skills:**
+- `install-all` - Install all plugins from this marketplace at once
+- `update` - Sync marketplace.json with plugins directory
+
+**Usage:**
+```bash
+# Install all plugins at once
+/plugin android-dev-tools:install-all
+
+# Update marketplace.json after plugin changes
+/plugin android-dev-tools:update
+```
 
 **Features:**
+- One-click install all plugins
 - Sync marketplace.json with plugins directory
 - Auto-bump versions on plugin changes
 - Add/remove plugins from marketplace
@@ -66,19 +78,26 @@ Auto-generate Chinese technical documentation for Android projects.
 
 ## Installation
 
-### Add Marketplace
+### Quick Start (Recommended)
 
 ```bash
+# 1. Add marketplace
 /plugin marketplace add github.com/adzcsx2/claude_skill
-```
 
-### Install Plugins
-
-```bash
-# Install marketplace management tool
+# 2. Install android-dev-tools (includes install-all skill)
 /plugin install android-dev-tools@android-dev-tools
 
-# Install other plugins
+# 3. Install all other plugins at once
+/plugin android-dev-tools:install-all
+```
+
+### Manual Installation
+
+```bash
+# Add marketplace
+/plugin marketplace add github.com/adzcsx2/claude_skill
+
+# Install plugins individually
 /plugin install gradle-build-performance@android-dev-tools
 /plugin install apply-remote-sign@android-dev-tools
 /plugin install update-docs@android-dev-tools
@@ -104,6 +123,8 @@ claude_skill/
 │   │   ├── .claude-plugin/
 │   │   │   └── plugin.json
 │   │   └── skills/
+│   │       ├── install-all/
+│   │       │   └── SKILL.md
 │   │       └── update/
 │   │           └── SKILL.md
 │   ├── gradle-build-performance/
