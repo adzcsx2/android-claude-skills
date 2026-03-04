@@ -1,0 +1,28 @@
+{
+  "name": "android-dev-tools",
+  "description": "Android development tools for Claude Code - build performance, remote signing, and documentation generation",
+  "owner": {
+    "name": "adzcsx2",
+    "url": "https://github.com/adzcsx2"
+  },
+  "plugins": [
+    {
+      "name": "gradle-build-performance",
+      "source": "./plugins/gradle-build-performance",
+      "description": "Debug and optimize Android/Gradle build performance. Analyze build scans, identify bottlenecks, enable configuration cache.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "apply-remote-sign",
+      "source": "./plugins/apply-remote-sign",
+      "description": "Auto-configure remote APK signing for Android projects. Supports Groovy DSL and Kotlin DSL.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "update-docs",
+      "source": "./plugins/update-docs",
+      "description": "Auto-generate Chinese technical documentation for Android projects. Analyzes structure, generates interfaces, navigation, components docs.",
+      "version": "1.0.0"
+    }
+  ]
+}

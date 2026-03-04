@@ -1,0 +1,9 @@
+{
+  "name": "update-docs",
+  "description": "Auto-generate Chinese technical documentation for Android projects. Analyzes project structure and generates comprehensive docs.",
+  "version": "1.0.0",
+  "author": {
+    "name": "adzcsx2",
+    "url": "https://github.com/adzcsx2"
+  }
+}

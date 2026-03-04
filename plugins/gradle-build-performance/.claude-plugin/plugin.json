@@ -1,0 +1,9 @@
+{
+  "name": "gradle-build-performance",
+  "description": "Debug and optimize Android/Gradle build performance. Use when builds are slow, investigating CI/CD performance, analyzing build scans, or identifying compilation bottlenecks.",
+  "version": "1.0.0",
+  "author": {
+    "name": "adzcsx2",
+    "url": "https://github.com/adzcsx2"
+  }
+}
