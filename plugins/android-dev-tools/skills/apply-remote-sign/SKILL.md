@@ -91,8 +91,14 @@ python scripts/build.py assembleDebug
 当用户调用此 skill 时，执行以下 Python 脚本：
 
 ```bash
-# 工具路径（插件内置）
-TOOL_PATH="$HOME/.claude/plugins/android-dev-tools/AndroidAutoRemoteSignTool"
+# 查找插件缓存目录中的工具路径
+PLUGIN_BASE="$HOME/.claude/plugins/cache/android-dev-tools/android-dev-tools"
+TOOL_PATH=$(find "$PLUGIN_BASE" -name "AndroidAutoRemoteSignTool" -type d 2>/dev/null | head -1)
+
+if [ -z "$TOOL_PATH" ]; then
+  echo "Error: AndroidAutoRemoteSignTool not found in plugin cache"
+  exit 1
+fi
 
 # 基本命令
 python "${TOOL_PATH}/remote_sign/apply_remote_sign.py" --project-path "{project_path}"
