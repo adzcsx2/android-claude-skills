@@ -1,11 +1,11 @@
 ---
-name: update
-description: Sync marketplace.json with plugins directory, update both English and Chinese README files, then commit and push.
+name: update-remote-plugins
+description: Sync marketplace.json, plugin.json, and README files, then commit and push to remote.
 ---
 
-# Marketplace Update Skill
+# Update Remote Plugins
 
-Automatically sync `.claude-plugin/marketplace.json` with the `plugins/` directory and update README files.
+Sync marketplace.json with plugins directory, update both English and Chinese README files, then commit and push to remote.
 
 ## When to Use
 
@@ -16,7 +16,7 @@ Automatically sync `.claude-plugin/marketplace.json` with the `plugins/` directo
 ## Trigger
 
 ```
-/android-dev-tools:update
+/android-dev-tools:update-remote-plugins
 ```
 
 ---

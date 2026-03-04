@@ -11,7 +11,7 @@
 | `gradle-build-performance` | 调试和优化 Gradle 构建性能 |
 | `apply-remote-sign` | 自动配置远程 APK 签名 |
 | `update-docs` | 生成中文技术文档 |
-| `update` | 同步 marketplace.json 和 README 文件 |
+| `update-remote-plugins` | 同步 marketplace.json 和 README 文件 |
 
 ---
 
@@ -67,7 +67,7 @@
 
 ---
 
-## update
+## update-remote-plugins
 
 同步 marketplace.json 与插件目录，并更新 README 文件。
 
@@ -78,7 +78,7 @@
 - 同步中英文 README 文件
 - 提交并推送到远程
 
-**用法：** `/android-dev-tools:update`
+**用法：** `/android-dev-tools:update-remote-plugins`
 
 ---
 
@@ -117,10 +117,10 @@ claude_skill/
 │           │   └── SKILL.md
 │           ├── update-docs/
 │           │   └── SKILL.md
-│           └── update/
+│           └── update-remote-plugins/
 │               └── SKILL.md
-├── README.md            # 英文
-├── README_CN.md         # 中文
+├── README.md                  # 英文
+├── README_CN.md               # 中文
 └── .gitignore
 ```
 
