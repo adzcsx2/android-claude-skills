@@ -1,0 +1,9 @@
+{
+  "name": "apply-remote-sign",
+  "description": "Auto-configure remote APK signing for Android projects. Supports Groovy DSL (build.gradle) and Kotlin DSL (build.gradle.kts).",
+  "version": "1.0.0",
+  "author": {
+    "name": "adzcsx2",
+    "url": "https://github.com/adzcsx2"
+  }
+}

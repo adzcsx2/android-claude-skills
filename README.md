@@ -1,10 +1,24 @@
 # Android Dev Tools - Claude Code Marketplace
 
-Android development tools for Claude Code. This marketplace contains 3 plugins for build performance optimization, remote APK signing, and documentation generation.
+Android development tools for Claude Code. This marketplace contains plugins for build performance optimization, remote APK signing, documentation generation, and marketplace management.
 
 ## Plugins
 
-### 1. gradle-build-performance
+### android-dev-tools (Marketplace Management)
+
+Marketplace management tools for this repository.
+
+**Usage:** `/plugin android-dev-tools:update`
+
+**Features:**
+- Sync marketplace.json with plugins directory
+- Auto-bump versions on plugin changes
+- Add/remove plugins from marketplace
+- Commit and push updates
+
+---
+
+### gradle-build-performance
 
 Debug and optimize Android/Gradle build performance.
 
@@ -17,7 +31,9 @@ Debug and optimize Android/Gradle build performance.
 
 **Usage:** `/gradle-build-performance:gradle-build-performance`
 
-### 2. apply-remote-sign
+---
+
+### apply-remote-sign
 
 Auto-configure remote APK signing for Android projects.
 
@@ -26,10 +42,13 @@ Auto-configure remote APK signing for Android projects.
 - Creates `.env.example` template
 - Updates `.gitignore` and `gradle.properties`
 - Integrates signing tasks into build scripts
+- **Includes AndroidAutoRemoteSignTool** (built-in)
 
 **Usage:** `/apply-remote-sign:apply-remote-sign [project_path] [--modules module1,module2]`
 
-### 3. update-docs
+---
+
+### update-docs
 
 Auto-generate Chinese technical documentation for Android projects.
 
@@ -50,14 +69,16 @@ Auto-generate Chinese technical documentation for Android projects.
 ### Add Marketplace
 
 ```bash
-# Add this marketplace to Claude Code
 /plugin marketplace add github.com/adzcsx2/claude_skill
 ```
 
 ### Install Plugins
 
 ```bash
-# Install all plugins
+# Install marketplace management tool
+/plugin install android-dev-tools@android-dev-tools
+
+# Install other plugins
 /plugin install gradle-build-performance@android-dev-tools
 /plugin install apply-remote-sign@android-dev-tools
 /plugin install update-docs@android-dev-tools
@@ -72,14 +93,6 @@ Auto-generate Chinese technical documentation for Android projects.
 
 ---
 
-## Requirements
-
-- Claude Code CLI
-- For `apply-remote-sign`: Python 3.6+, `requests` library, JDK 11, Android SDK
-- For `update-docs`: Android project with standard structure
-
----
-
 ## Repository Structure
 
 ```
@@ -87,6 +100,12 @@ claude_skill/
 ├── .claude-plugin/
 │   └── marketplace.json          # Marketplace catalog
 ├── plugins/
+│   ├── android-dev-tools/        # Marketplace management
+│   │   ├── .claude-plugin/
+│   │   │   └── plugin.json
+│   │   └── skills/
+│   │       └── update/
+│   │           └── SKILL.md
 │   ├── gradle-build-performance/
 │   │   ├── .claude-plugin/
 │   │   │   └── plugin.json
@@ -96,9 +115,15 @@ claude_skill/
 │   ├── apply-remote-sign/
 │   │   ├── .claude-plugin/
 │   │   │   └── plugin.json
-│   │   └── skills/
-│   │       └── apply-remote-sign/
-│   │           └── SKILL.md
+│   │   ├── skills/
+│   │   │   └── apply-remote-sign/
+│   │   │       └── SKILL.md
+│   │   └── AndroidAutoRemoteSignTool/  # Built-in tool
+│   │       └── remote_sign/
+│   │           ├── apply_remote_sign.py
+│   │           ├── apply_groovy_sign.py
+│   │           ├── apply_kts_sign.py
+│   │           └── ...
 │   └── update-docs/
 │       ├── .claude-plugin/
 │       │   └── plugin.json
@@ -107,6 +132,14 @@ claude_skill/
 │               └── SKILL.md
 └── README.md
 ```
+
+---
+
+## Requirements
+
+- Claude Code CLI
+- For `apply-remote-sign`: Python 3.6+, `requests` library, JDK 11, Android SDK
+- For `update-docs`: Android project with standard structure
 
 ---
 

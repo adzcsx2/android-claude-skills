@@ -1,0 +1,9 @@
+{
+  "name": "android-dev-tools",
+  "description": "Marketplace management tools for this repository. Includes update skill to sync marketplace.json with plugins.",
+  "version": "1.0.0",
+  "author": {
+    "name": "adzcsx2",
+    "url": "https://github.com/adzcsx2"
+  }
+}

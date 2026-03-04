@@ -7,6 +7,12 @@
   },
   "plugins": [
     {
+      "name": "android-dev-tools",
+      "source": "./plugins/android-dev-tools",
+      "description": "Marketplace management tools. Includes update skill to sync marketplace.json with plugins directory.",
+      "version": "1.0.0"
+    },
+    {
       "name": "gradle-build-performance",
       "source": "./plugins/gradle-build-performance",
       "description": "Debug and optimize Android/Gradle build performance. Analyze build scans, identify bottlenecks, enable configuration cache.",
@@ -15,7 +21,7 @@
     {
       "name": "apply-remote-sign",
       "source": "./plugins/apply-remote-sign",
-      "description": "Auto-configure remote APK signing for Android projects. Supports Groovy DSL and Kotlin DSL.",
+      "description": "Auto-configure remote APK signing for Android projects. Supports Groovy DSL and Kotlin DSL. Includes AndroidAutoRemoteSignTool.",
       "version": "1.0.0"
     },
     {
