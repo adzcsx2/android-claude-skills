@@ -1,7 +1,7 @@
 {
   "name": "android-dev-tools",
   "description": "All-in-one Android development toolkit. Includes: gradle-build-performance (build optimization), apply-remote-sign (APK remote signing), update-docs (documentation generation with md file migration), and update-remote-plugins (marketplace management with local sync).",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "author": {
     "name": "adzcsx2",
     "url": "https://github.com/adzcsx2"

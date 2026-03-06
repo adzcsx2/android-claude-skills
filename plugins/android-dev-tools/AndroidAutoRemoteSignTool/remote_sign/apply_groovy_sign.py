@@ -388,6 +388,33 @@ afterEvaluate {
         old_sign_config_pattern = r'\n*// =+\n// APK签名配置\n// =+\n\next\s*\{[^}]*?(?:STAGE_SIGN_API_URL|RELEASE_SIGN_API_URL)[^}]*?\}\s*'
         content = re.sub(old_sign_config_pattern, '\n', content, flags=re.DOTALL)
 
+        # 1.5. 处理 applicationId：转换为 project property 模式
+        # 检查是否已使用 project property 模式
+        if 'project.hasProperty("applicationId")' in content or "project.hasProperty('applicationId')" in content:
+            log("INFO", "applicationId 已使用 project property 模式，跳过")
+        elif 'applicationId' in content:
+            # 提取当前 applicationId 值并转换为 project property 模式
+            # 匹配格式: applicationId "com.xxx.xxx" 或 applicationId 'com.xxx.xxx'
+            app_id_match = re.search(r'applicationId\s+["\']([^"\']+)["\']', content)
+            if app_id_match:
+                current_app_id = app_id_match.group(1)
+                old_pattern = f'applicationId "{current_app_id}"'
+                new_pattern = f'''if (project.hasProperty("applicationId")) {{
+            applicationId project.property('applicationId')
+        }} else {{
+            applicationId "{current_app_id}"
+        }}'''
+                # 也处理单引号情况
+                old_pattern_single = f"applicationId '{current_app_id}'"
+                if old_pattern in content:
+                    content = content.replace(old_pattern, new_pattern)
+                    log("INFO", f"已将 applicationId 转换为 project property 模式 (默认值: {current_app_id})")
+                elif old_pattern_single in content:
+                    content = content.replace(old_pattern_single, new_pattern)
+                    log("INFO", f"已将 applicationId 转换为 project property 模式 (默认值: {current_app_id})")
+        else:
+            log("INFO", "未找到 applicationId 配置，跳过")
+
         # 2. 在 android { 块中合适位置添加 lintOptions 等配置
         android_idx = content.find("android {")
         if android_idx == -1:

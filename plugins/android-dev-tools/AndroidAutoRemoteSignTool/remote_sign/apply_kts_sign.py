@@ -456,6 +456,11 @@ def update_app_build_gradle_kts(project_root: Path, module_name: str = "app") ->
         content = _fix_signing_config_refs(content, project_root, module_name)
 
         # ========================================
+        # Step 0.6: 转换 applicationId 为 project property 模式
+        # ========================================
+        content = _convert_application_id(content)
+
+        # ========================================
         # Step 1: 确保 debug 签名配置存在
         # ========================================
         content = _ensure_debug_signing_config(content)
@@ -565,6 +570,46 @@ def _fix_signing_config_refs(content: str, project_root: Path, module_name: str)
             if old_ref in content:
                 content = content.replace(old_ref, new_ref)
                 log("INFO", f"将签名配置引用 '{config_name}' 替换为 'debug' (keystore 不存在: {resolved_path})")
+
+    return content
+
+
+def _convert_application_id(content: str) -> str:
+    """将 applicationId 转换为 project property 模式。
+
+    检查是否已使用 project property 模式，如未使用则转换。
+    Kotlin DSL 格式:
+        if (project.hasProperty("applicationId")) {
+            applicationId = project.property("applicationId") as String
+        } else {
+            applicationId = "com.xxx.xxx"
+        }
+    """
+    # 检查是否已使用 project property 模式
+    if 'project.hasProperty("applicationId")' in content or "project.hasProperty('applicationId')" in content:
+        log("INFO", "applicationId 已使用 project property 模式，跳过")
+        return content
+
+    # 查找 applicationId = "com.xxx.xxx" 或 applicationId = 'com.xxx.xxx'
+    app_id_match = re.search(r'applicationId\s*=\s*["\']([^"\']+)["\']', content)
+    if app_id_match:
+        current_app_id = app_id_match.group(1)
+        old_pattern = f'applicationId = "{current_app_id}"'
+        old_pattern_single = f"applicationId = '{current_app_id}'"
+        new_pattern = f'''if (project.hasProperty("applicationId")) {{
+            applicationId = project.property("applicationId") as String
+        }} else {{
+            applicationId = "{current_app_id}"
+        }}'''
+
+        if old_pattern in content:
+            content = content.replace(old_pattern, new_pattern)
+            log("INFO", f"已将 applicationId 转换为 project property 模式 (默认值: {current_app_id})")
+        elif old_pattern_single in content:
+            content = content.replace(old_pattern_single, new_pattern)
+            log("INFO", f"已将 applicationId 转换为 project property 模式 (默认值: {current_app_id})")
+    else:
+        log("INFO", "未找到 applicationId 配置，跳过")
 
     return content
 
