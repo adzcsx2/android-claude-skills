@@ -10,8 +10,8 @@
 |-------|------|
 | `gradle-build-performance` | 调试和优化 Gradle 构建性能 |
 | `apply-remote-sign` | 自动配置远程 APK 签名 |
-| `update-docs` | 生成中文技术文档 |
-| `update-remote-plugins` | 同步 marketplace.json 和 README 文件 |
+| `update-docs` | 生成文档并迁移根目录 md 文件到 docs/ |
+| `update-remote-plugins` | 同步 marketplace 并更新本地插件 |
 
 ---
 
@@ -59,6 +59,8 @@
 - 列出四大组件（Activity、Service、Receiver、Provider）
 - 文档化通知渠道和 API 接口
 - 支持增量更新
+- **新增：** 将根目录 md 文件迁移到 docs/ 目录
+- **新增：** 更新 README 并添加分类文档快捷链接
 
 **用法：**
 ```bash
@@ -77,6 +79,7 @@
 - 添加/移除插件到 marketplace.json
 - 同步中英文 README 文件
 - 提交并推送到远程
+- **新增：** 同步更新到本地 Claude Code 插件目录
 
 **用法：** `/android-dev-tools:update-remote-plugins`
 

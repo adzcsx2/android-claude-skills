@@ -1,6 +1,6 @@
 {
   "name": "android-dev-tools",
-  "description": "Android development toolkit for Claude Code - build performance, remote signing, documentation generation, and marketplace management",
+  "description": "Android development toolkit for Claude Code - build performance, remote signing, documentation generation with md file migration, and marketplace management with local sync",
   "owner": {
     "name": "adzcsx2",
     "url": "https://github.com/adzcsx2"
@@ -9,8 +9,8 @@
     {
       "name": "android-dev-tools",
       "source": "./plugins/android-dev-tools",
-      "description": "All-in-one Android development toolkit. Includes: gradle-build-performance, apply-remote-sign, update-docs, and marketplace update skills.",
-      "version": "2.0.1"
+      "description": "All-in-one Android development toolkit. Includes: gradle-build-performance, apply-remote-sign, update-docs (with md file migration), and update-remote-plugins (with local sync).",
+      "version": "2.0.2"
     }
   ]
 }

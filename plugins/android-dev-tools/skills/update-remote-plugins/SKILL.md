@@ -1,6 +1,6 @@
 ---
 name: update-remote-plugins
-description: Sync marketplace.json, plugin.json, and README files, then commit and push to remote.
+description: Sync marketplace.json, plugin.json, and README files, then commit and push to remote. Also syncs changes to local Claude Code plugins directory.
 ---
 
 # Update Remote Plugins
@@ -77,6 +77,43 @@ git commit -m "chore: update plugin to v{version} - {changes summary}"
 git push
 ```
 
+### 7. Sync Local Plugins
+
+After successful push, sync changes to local Claude Code plugins directory:
+
+**Target Directory**: `~/.claude/plugins/cache/android-dev-tools/`
+
+**Sync Process**:
+
+1. **Determine target path**:
+   ```
+   ~/.claude/plugins/cache/android-dev-tools/android-dev-tools/{version}/
+   ```
+
+2. **Copy updated files**:
+   ```bash
+   # Copy skills
+   cp -r plugins/android-dev-tools/skills/* ~/.claude/plugins/cache/android-dev-tools/android-dev-tools/{version}/skills/
+
+   # Copy plugin.json
+   cp plugins/android-dev-tools/.claude-plugin/plugin.json ~/.claude/plugins/cache/android-dev-tools/android-dev-tools/{version}/.claude-plugin/
+
+   # Copy README files
+   cp README.md README_CN.md ~/.claude/plugins/cache/android-dev-tools/android-dev-tools/{version}/
+   ```
+
+3. **Verify sync**:
+   - Check all skill files exist
+   - Verify plugin.json version matches
+   - Confirm README files are updated
+
+4. **Log sync result**:
+   ```
+   ✅ Synced {N} skills to local plugins
+   ✅ Updated plugin.json to v{version}
+   ✅ Synced README files
+   ```
+
 ---
 
 ## README Sync Rules
@@ -101,10 +138,10 @@ CHANGES=$(git diff HEAD --name-only -- plugins/)
 if [ -n "$CHANGES" ]; then
   # Read current version
   CURRENT=$(cat plugins/android-dev-tools/.claude-plugin/plugin.json | grep '"version"' | cut -d'"' -f4)
-  
+
   # Bump patch version
-  NEW_VERSION=$(echo $CURRENT | awk -F. '{$NF++;print}') 
-  
+  NEW_VERSION=$(echo $CURRENT | awk -F. '{$NF++;print}')
+
   # Update plugin.json
   # Update marketplace.json
 fi
@@ -116,6 +153,13 @@ fi
 git add -A
 git commit -m "chore: update to v$NEW_VERSION"
 git push
+
+# 5. Sync to local plugins (after successful push)
+LOCAL_PATH="$HOME/.claude/plugins/cache/android-dev-tools/android-dev-tools/$NEW_VERSION"
+cp -r plugins/android-dev-tools/skills/* "$LOCAL_PATH/skills/"
+cp plugins/android-dev-tools/.claude-plugin/plugin.json "$LOCAL_PATH/.claude-plugin/"
+cp README.md README_CN.md "$LOCAL_PATH/"
+echo "✅ Synced to local plugins: $LOCAL_PATH"
 ```
 
 ---
@@ -126,3 +170,6 @@ git push
 2. Ensure git is configured with push access
 3. Keep README.md and README_CN.md synchronized
 4. Version format: semver (major.minor.patch)
+5. Local sync only happens after successful push
+6. Local plugins path: `~/.claude/plugins/cache/android-dev-tools/`
+7. If local sync fails, remote changes are already pushed (manual sync needed)

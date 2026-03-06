@@ -10,8 +10,8 @@ All-in-one Android development toolkit for Claude Code. Install once, get everyt
 |-------|-------------|
 | `gradle-build-performance` | Debug and optimize Gradle build performance |
 | `apply-remote-sign` | Auto-configure remote APK signing |
-| `update-docs` | Generate Chinese technical documentation |
-| `update-remote-plugins` | Sync marketplace.json and README files |
+| `update-docs` | Generate docs and migrate root md files to docs/ |
+| `update-remote-plugins` | Sync marketplace and update local plugins |
 
 ---
 
@@ -59,6 +59,8 @@ Auto-generate Chinese technical documentation for Android projects.
 - Lists four components (Activity, Service, Receiver, Provider)
 - Documents notification channels and API endpoints
 - Supports incremental updates
+- **NEW:** Migrates root md files to docs/ directory
+- **NEW:** Updates README with categorized doc quick links
 
 **Usage:**
 ```bash
@@ -77,6 +79,7 @@ Sync marketplace.json with plugins directory and update README files.
 - Add/remove plugins from marketplace.json
 - Sync English and Chinese README files
 - Commit and push to remote
+- **NEW:** Sync changes to local Claude Code plugins directory
 
 **Usage:** `/android-dev-tools:update-remote-plugins`
 

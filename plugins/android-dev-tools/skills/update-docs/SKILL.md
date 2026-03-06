@@ -1,6 +1,6 @@
 ---
 name: update-docs
-description: Auto-generate Chinese technical documentation for Android projects. Analyzes structure, generates interfaces, navigation, components, notifications, and API docs.
+description: Auto-generate Chinese technical documentation for Android projects. Analyzes structure, generates interfaces, navigation, components, notifications, and API docs. Also migrates root md files to docs/ and updates README with quick links.
 ---
 
 # update-docs Skill
@@ -14,6 +14,8 @@ Android 项目文档自动生成工具。分析项目结构，生成中文技术
 - Documenting navigation flows and Activity-Fragment relationships
 - Listing Android four components (Activity, Service, Receiver, Provider)
 - Documenting notification channels and API endpoints
+- Migrating root directory md files to docs/ for centralized management
+- Updating README with categorized doc quick links
 
 ## Example Prompts
 
@@ -109,7 +111,44 @@ Use Grep: `NotificationChannel`, `NotificationManager`
 #### 4.6 Analyze API Interfaces
 Use Grep: `@GET`, `@POST`, `@PUT`, `@DELETE`
 
-### 5. Generate Documents
+### 5. Migrate Root MD Files to docs/
+
+Scan root directory for markdown files (excluding README.md):
+
+```bash
+ls -1 *.md 2>/dev/null | grep -v "README.md"
+```
+
+For each root md file:
+
+1. **Analyze content** - Determine category based on content:
+   - API/接口相关 → `docs/api/`
+   - 功能/特性相关 → `docs/features/`
+   - 开发规范 → `docs/development/`
+   - 架构相关 → `docs/architecture/`
+   - 其他 → `docs/`
+
+2. **Check for duplicates** - If similar file exists in docs/:
+   - Compare content detail level
+   - Keep more detailed version
+   - Merge if complementary
+
+3. **Move file** - Copy content to docs/ and delete root file:
+   ```
+   Root: 深色模式代码适配文档.md
+   → docs/features/dark-mode.md
+   ```
+
+4. **Record migration** in metadata:
+   ```json
+   {
+     "migratedFiles": {
+       "深色模式代码适配文档.md": "docs/features/dark-mode.md"
+     }
+   }
+   ```
+
+### 6. Generate Documents
 
 All docs go in `docs/` directory:
 
@@ -125,9 +164,40 @@ All docs go in `docs/` directory:
 | API.md | API interface docs (URL and method) |
 | CHANGELOG.md | Doc update changelog |
 
-Also generate `README.md` at project root with doc index.
+### 7. Update README with Doc Links
 
-### 6. Update Metadata
+Update `README.md` at project root with categorized doc links:
+
+```markdown
+## 文档导航
+
+> 快速访问项目文档: [文档中心](docs/README.md)
+
+### 快速开始
+| 文档 | 描述 |
+|------|------|
+| [环境配置](docs/getting-started/installation.md) | 开发环境配置与依赖安装 |
+| [构建指南](docs/getting-started/building.md) | 构建命令与多环境配置 |
+
+### 功能文档
+| 文档 | 描述 |
+|------|------|
+| [深色模式适配](docs/features/dark-mode.md) | 深色模式代码适配指南 |
+| [颜色映射规则](docs/features/color-mapping.md) | 深色模式颜色映射规则 |
+
+### API 文档
+| 文档 | 描述 |
+|------|------|
+| [接口文档](docs/api/endpoints.md) | 后端 API 接口汇总 |
+```
+
+**Link Format Rules:**
+- Use relative paths: `docs/features/dark-mode.md`
+- Group by category with clear headers
+- Add description for each document
+- Include link to docs/README.md at top
+
+### 8. Update Metadata
 
 Update timestamps in `docs/.doc-metadata.json`, append update records to `CHANGELOG.md`.
 
@@ -202,3 +272,6 @@ NotificationChannel\(["']([^"']+)["'],\s*["']([^"']+)["']
 2. Time format uses ISO 8601 standard
 3. Add `.doc-metadata.json` to .gitignore
 4. Record each update in CHANGELOG.md
+5. Root md files are migrated to docs/ and deleted from root
+6. README.md is preserved and updated with doc links
+7. Duplicate detection: keep more detailed version when merging
