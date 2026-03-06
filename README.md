@@ -11,6 +11,7 @@ All-in-one Android development toolkit for Claude Code. Install once, get everyt
 | `gradle-build-performance` | Debug and optimize Gradle build performance |
 | `apply-remote-sign` | Auto-configure remote APK signing |
 | `update-docs` | Generate docs and migrate root md files to docs/ |
+| `android-fold-adapter` | Diagnose and fix foldable screen adaptation issues |
 | `update-remote-plugins` | Sync marketplace and update local plugins |
 
 ---
@@ -85,6 +86,24 @@ Sync marketplace.json with plugins directory and update README files.
 
 ---
 
+## android-fold-adapter
+
+Diagnose and fix Android foldable screen adaptation issues.
+
+**Features:**
+- Diagnose Activity recreation issues on fold/unfold
+- Fix state loss problems (UI visibility, data fields)
+- Resolve fragment reference invalidation (ViewPager2)
+- Auto-update skill with new patterns/solutions
+- Archive known issues for future reference
+
+**Usage:**
+```bash
+/android-dev-tools:android-fold-adapter "搜索页折叠后内容消失"
+```
+
+---
+
 ## Installation
 
 ```bash
@@ -119,6 +138,8 @@ claude_skill/
 │           ├── apply-remote-sign/
 │           │   └── SKILL.md
 │           ├── update-docs/
+│           │   └── SKILL.md
+│           ├── android-fold-adapter/
 │           │   └── SKILL.md
 │           └── update-remote-plugins/
 │               └── SKILL.md

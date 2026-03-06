@@ -11,6 +11,7 @@
 | `gradle-build-performance` | 调试和优化 Gradle 构建性能 |
 | `apply-remote-sign` | 自动配置远程 APK 签名 |
 | `update-docs` | 生成文档并迁移根目录 md 文件到 docs/ |
+| `android-fold-adapter` | 诊断和修复折叠屏适配问题 |
 | `update-remote-plugins` | 同步 marketplace 并更新本地插件 |
 
 ---
@@ -85,6 +86,24 @@
 
 ---
 
+## android-fold-adapter
+
+诊断和修复 Android 折叠屏适配问题。
+
+**功能：**
+- 诊断折叠/展开时的 Activity 重建问题
+- 修复状态丢失问题（UI 可见性、数据字段）
+- 解决 Fragment 引用失效（ViewPager2）
+- 自动更新 skill 以记录新模式/解决方案
+- 归档已知问题供将来参考
+
+**用法：**
+```bash
+/android-dev-tools:android-fold-adapter "搜索页折叠后内容消失"
+```
+
+---
+
 ## 安装
 
 ```bash
@@ -119,6 +138,8 @@ claude_skill/
 │           ├── apply-remote-sign/
 │           │   └── SKILL.md
 │           ├── update-docs/
+│           │   └── SKILL.md
+│           ├── android-fold-adapter/
 │           │   └── SKILL.md
 │           └── update-remote-plugins/
 │               └── SKILL.md
