@@ -649,6 +649,18 @@ afterEvaluate {
                         indent = "            "
                         content = content[:first_newline + 1] + indent + f"signingConfig signingConfigs.debug\n" + content[first_newline + 1:]
 
+        # 4.5 修复所有 signingConfig 引用（productFlavors 中可能有其他签名配置引用）
+        # 替换所有非 debug 的签名配置引用为 debug
+        # 例如：signingConfig signingConfigs.royole -> signingConfig signingConfigs.debug
+        all_signconfig_pattern = r'signingConfig\s+signingConfigs\.(\w+)'
+        def replace_signconfig(match):
+            config_name = match.group(1)
+            if config_name != 'debug':
+                log("INFO", f"将 signingConfigs.{config_name} 替换为 signingConfigs.debug")
+                return 'signingConfig signingConfigs.debug'
+            return match.group(0)
+        content = re.sub(all_signconfig_pattern, replace_signconfig, content)
+
         # 5. 在所有 flavor 中添加 signApiUrl（通用处理）
         # 查找 productFlavors 块
         productflavors_idx = content.find("productFlavors {", android_idx)
