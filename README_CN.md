@@ -22,11 +22,15 @@
 调试和优化 Android/Gradle 构建性能。
 
 **功能：**
+- **新增：** 诊断工作流，提供分级风险方案（零风险/低风险/中等风险）
+- **新增：** 常见问题检测（动态版本、版本不一致等）
+- **新增：** 推荐 gradle.properties 模板
 - 分析 Gradle 构建扫描
 - 识别配置与执行阶段瓶颈
-- 启用配置缓存
+- 启用配置缓存、构建缓存、并行编译
 - 优化 CI/CD 构建时间
 - 调试 kapt/KSP 注解处理
+- Groovy DSL 和 Kotlin DSL 示例
 
 **用法：** `/android-dev-tools:gradle-build-performance`
 

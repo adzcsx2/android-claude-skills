@@ -27,14 +27,52 @@ description: Debug and optimize Android/Gradle build performance. Use when build
 
 ---
 
-## Workflow
+## Diagnostic Workflow
 
-1. **Measure Baseline** — Clean build + incremental build times
-2. **Generate Build Scan** — `./gradlew assembleDebug --scan`
-3. **Identify Phase** — Configuration? Execution? Dependency resolution?
-4. **Apply ONE optimization** — Don't batch changes
-5. **Measure Improvement** — Compare against baseline
-6. **Verify in Build Scan** — Visual confirmation
+### Step 1: Analyze Project Configuration
+
+Read and analyze the following files:
+- `gradle.properties` - Gradle configuration
+- `build.gradle` / `build.gradle.kts` - Root build file
+- `app/build.gradle` / `app/build.gradle.kts` - App module
+- `settings.gradle` / `settings.gradle.kts` - Settings
+- `gradle/wrapper/gradle-wrapper.properties` - Gradle version
+
+### Step 2: Check Configuration Status
+
+Create a diagnostic table comparing current vs optimal:
+
+| # | Optimization | Current Status | Issue | Risk |
+|---|--------------|----------------|-------|------|
+| 1 | Configuration Cache | ❌/✅ | ... | Low |
+| 2 | Build Cache | ❌/✅ | ... | None |
+| 3 | Parallel Execution | ❌/✅ | ... | None |
+| 4 | JVM Heap | ⚠️/✅ | ... | None |
+| 5 | Non-Transitive R | ❌/✅ | ... | - |
+| 6 | Kapt → KSP | ❌/✅ | ... | Medium |
+| 7 | Dynamic Dependencies | ⚠️/✅ | ... | Low |
+| 8 | Repository Order | ❌/✅ | ... | - |
+
+### Step 3: Propose Risk-Level Plans
+
+**Plan A: Zero Risk (Configuration Only)**
+- Only modify `gradle.properties`
+- No code changes, no version upgrades
+- Expected improvement: 20-40%
+
+**Plan B: Low Risk (Configuration + Dependency Fixes)**
+- Plan A + fix dependency issues
+- Unify library versions, remove dynamic versions
+- Expected improvement: 25-45%
+
+**Plan C: Medium Risk (Plan B + KSP Migration)**
+- Plan B + migrate kapt to KSP
+- Requires testing annotation processing
+- Expected improvement: 40-60%
+
+### Step 4: Wait for User Confirmation
+
+**CRITICAL**: Present the plan and WAIT for user approval before making any changes.
 
 ---
 
@@ -66,8 +104,8 @@ description: Debug and optimize Android/Gradle build performance. Use when build
 
 | Phase | What Happens | Common Issues |
 |-------|--------------|---------------|
-| **Initialization** | `settings.gradle.kts` evaluated | Too many `include()` statements |
-| **Configuration** | All `build.gradle.kts` files evaluated | Expensive plugins, eager task creation |
+| **Initialization** | `settings.gradle` evaluated | Too many `include()` statements |
+| **Configuration** | All `build.gradle` files evaluated | Expensive plugins, eager task creation |
 | **Execution** | Tasks run based on inputs/outputs | Cache misses, non-incremental tasks |
 
 ### Identify the Bottleneck
@@ -79,6 +117,81 @@ Build scan → Performance → Build timeline
 - **Long configuration phase**: Focus on plugin and buildscript optimization
 - **Long execution phase**: Focus on task caching and parallelization
 - **Dependency resolution slow**: Focus on repository configuration
+
+---
+
+## Common Issues Detection
+
+### 1. Dynamic Version Dependencies
+
+**Detection**: Search for `latest.release`, `+`, or `x.x.+` in dependencies
+
+```groovy
+// BAD: Forces resolution every build
+implementation 'com.example:lib:latest.release'
+implementation 'com.example:lib:+'
+implementation 'com.example:lib:1.0.+'
+
+// GOOD: Fixed version
+implementation 'com.example:lib:1.2.3'
+```
+
+### 2. Version Inconsistencies
+
+**Detection**: Same library with different versions
+
+```groovy
+// BAD: Inconsistent versions
+implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
+
+// GOOD: Unified version
+implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+```
+
+### 3. Parallel Execution Disabled
+
+**Detection**: `org.gradle.parallel` is commented or set to false
+
+```properties
+# BAD: Parallel disabled
+# org.gradle.parallel=true
+
+# GOOD: Parallel enabled
+org.gradle.parallel=true
+```
+
+### 4. Insufficient JVM Memory
+
+**Detection**: JVM heap < 3GB for medium/large projects
+
+```properties
+# BAD: Too small for modern projects
+org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+
+# GOOD: Adequate memory with GC optimization
+org.gradle.jvmargs=-Xmx4096m -XX:+UseParallelGC -Dfile.encoding=UTF-8
+```
+
+### 5. Build Cache Disabled
+
+**Detection**: `org.gradle.caching` not set or set to false
+
+```properties
+# GOOD: Enable build cache
+org.gradle.caching=true
+```
+
+### 6. Kapt Incremental Disabled
+
+**Detection**: Using kapt without incremental settings
+
+```properties
+# GOOD: Enable incremental kapt
+kapt.incremental.apt=true
+kapt.use.worker.api=true
+```
 
 ---
 
@@ -134,11 +247,19 @@ android.nonTransitiveRClass=true
 
 KSP is 2x faster than kapt for Kotlin:
 
+```groovy
+// Before (slow) - Groovy DSL
+kapt 'com.google.dagger:hilt-compiler:2.51.1'
+
+// After (fast) - Groovy DSL
+ksp 'com.google.dagger:hilt-compiler:2.51.1'
+```
+
 ```kotlin
-// Before (slow)
+// Before (slow) - Kotlin DSL
 kapt("com.google.dagger:hilt-compiler:2.51.1")
 
-// After (fast)
+// After (fast) - Kotlin DSL
 ksp("com.google.dagger:hilt-compiler:2.51.1")
 ```
 
@@ -146,26 +267,27 @@ ksp("com.google.dagger:hilt-compiler:2.51.1")
 
 Pin dependency versions:
 
-```kotlin
+```groovy
 // BAD: Forces resolution every build
-implementation("com.example:lib:+")
-implementation("com.example:lib:1.0.+")
+implementation "com.example:lib:+"
+implementation "com.example:lib:1.0.+"
 
 // GOOD: Fixed version
-implementation("com.example:lib:1.2.3")
+implementation "com.example:lib:1.2.3"
 ```
 
 ### 8. Optimize Repository Order
 
 Put most-used repositories first:
 
-```kotlin
-// settings.gradle.kts
+```groovy
+// settings.gradle (Groovy DSL)
 dependencyResolutionManagement {
     repositories {
         google()      // First: Android dependencies
         mavenCentral() // Second: Most libraries
         // Third-party repos last
+        maven { url 'https://jitpack.io' }
     }
 }
 ```
@@ -174,8 +296,8 @@ dependencyResolutionManagement {
 
 Composite builds are faster than `project()` for large monorepos:
 
-```kotlin
-// settings.gradle.kts
+```groovy
+// settings.gradle (Groovy DSL)
 includeBuild("shared-library") {
     dependencySubstitution {
         substitute(module("com.example:shared")).using(project(":"))
@@ -195,24 +317,79 @@ kapt.use.worker.api=true
 
 Don't read files or make network calls during configuration:
 
-```kotlin
+```groovy
 // BAD: Runs during configuration
-val version = file("version.txt").readText()
+def version = file("version.txt").text
 
-// GOOD: Defer to execution
-val version = providers.fileContents(file("version.txt")).asText
+// GOOD: Defer to execution (Groovy DSL)
+def version = providers.fileContents(layout.projectDirectory.file("version.txt")).asText
 ```
 
 ### 12. Use Lazy Task Configuration
 
 Avoid `create()`, use `register()`:
 
-```kotlin
+```groovy
 // BAD: Eagerly configured
 tasks.create("myTask") { ... }
 
 // GOOD: Lazily configured
 tasks.register("myTask") { ... }
+```
+
+---
+
+## Recommended gradle.properties Template
+
+```properties
+# ============================================
+# JVM Memory Configuration
+# ============================================
+org.gradle.jvmargs=-Xmx4096m -XX:+UseParallelGC -Dfile.encoding=UTF-8
+
+# ============================================
+# Parallel Compilation
+# ============================================
+org.gradle.parallel=true
+
+# ============================================
+# Build Cache
+# ============================================
+org.gradle.caching=true
+
+# ============================================
+# Daemon Configuration
+# ============================================
+org.gradle.daemon=true
+
+# ============================================
+# Configure on Demand
+# ============================================
+org.gradle.configureondemand=true
+
+# ============================================
+# AndroidX
+# ============================================
+android.useAndroidX=true
+android.enableJetifier=true
+
+# ============================================
+# Kotlin Compilation Optimization
+# ============================================
+kotlin.code.style=official
+kotlin.incremental=true
+kotlin.incremental.java=true
+
+# ============================================
+# Kapt Incremental Compilation
+# ============================================
+kapt.incremental.apt=true
+kapt.use.worker.api=true
+
+# ============================================
+# Android Specific Optimization
+# ============================================
+android.nonTransitiveRClass=true
 ```
 
 ---
@@ -238,7 +415,7 @@ tasks.register("myTask") { ... }
 **Causes & Fixes**:
 | Cause | Fix |
 |-------|-----|
-| Non-incremental changes | Avoid `build.gradle.kts` changes that invalidate cache |
+| Non-incremental changes | Avoid `build.gradle` changes that invalidate cache |
 | Large modules | Break into smaller feature modules |
 | Excessive kapt usage | Migrate to KSP |
 | Kotlin compiler memory | Increase `kotlin.daemon.jvmargs` |
@@ -261,13 +438,13 @@ tasks.register("myTask") { ... }
 
 ### Remote Build Cache
 
-```kotlin
-// settings.gradle.kts
+```groovy
+// settings.gradle (Groovy DSL)
 buildCache {
-    local { isEnabled = true }
-    remote<HttpBuildCache> {
-        url = uri("https://cache.example.com/")
-        isPush = System.getenv("CI") == "true"
+    local { enabled = true }
+    remote(HttpBuildCache) {
+        url = 'https://cache.example.com/'
+        push = System.getenv("CI") == "true"
         credentials {
             username = System.getenv("CACHE_USER")
             password = System.getenv("CACHE_PASS")
@@ -280,16 +457,16 @@ buildCache {
 
 For advanced build analytics:
 
-```kotlin
-// settings.gradle.kts
+```groovy
+// settings.gradle (Groovy DSL)
 plugins {
-    id("com.gradle.develocity") version "3.17"
+    id "com.gradle.develocity" version "3.17"
 }
 
 develocity {
     buildScan {
-        termsOfUseUrl.set("https://gradle.com/help/legal-terms-of-use")
-        termsOfUseAgree.set("yes")
+        termsOfUseUrl = "https://gradle.com/help/legal-terms-of-use"
+        termsOfUseAgree = "yes"
         publishing.onlyIf { System.getenv("CI") != null }
     }
 }
@@ -334,6 +511,7 @@ After optimizations, verify:
 - [ ] JVM memory tuned appropriately
 - [ ] CI remote cache configured
 - [ ] No configuration-time I/O
+- [ ] All library versions unified
 
 ---
 

@@ -22,11 +22,15 @@ All-in-one Android development toolkit for Claude Code. Install once, get everyt
 Debug and optimize Android/Gradle build performance.
 
 **Features:**
+- **NEW:** Diagnostic workflow with risk-level plans (Zero/Low/Medium)
+- **NEW:** Common issues detection (dynamic versions, version inconsistencies)
+- **NEW:** Recommended gradle.properties template
 - Analyze Gradle build scans
 - Identify configuration vs execution bottlenecks
-- Enable configuration cache
+- Enable configuration cache, build cache, parallel execution
 - Optimize CI/CD build times
 - Debug kapt/KSP annotation processing
+- Groovy DSL and Kotlin DSL examples
 
 **Usage:** `/android-dev-tools:gradle-build-performance`
 
