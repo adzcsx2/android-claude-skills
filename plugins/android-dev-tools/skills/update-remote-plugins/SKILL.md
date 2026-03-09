@@ -90,8 +90,10 @@ If changes detected, determine version bump:
 Stage and commit changes:
 ```bash
 git add .claude-plugin/marketplace.json README.md README_CN.md plugins/android-dev-tools/
-git commit -m "feat: Update plugin to v{version} - {changes summary}"
+git commit -m "feat: 更新插件至 v{version} - {变更摘要}"
 ```
+
+**注意：** Commit message 必须使用中文。
 
 Push with retry logic:
 ```bash
@@ -261,7 +263,7 @@ fi
 
 # 4. Commit and push
 git add .claude-plugin/marketplace.json README.md README_CN.md plugins/android-dev-tools/
-git commit -m "feat: Update plugin to v$NEW_VERSION"
+git commit -m "feat: 更新插件至 v$NEW_VERSION"
 
 # Push with retry
 git push || {
@@ -284,9 +286,10 @@ echo "✅ Synced to local plugins: $LOCAL_PATH"
 
 1. **ALWAYS pull first** - Avoid conflicts by syncing with remote before starting
 2. **ALWAYS sync to local** - New Claude Code windows need the updated plugin
-3. Run from the marketplace root directory
-4. Ensure git is configured with push access
-5. Keep README.md and README_CN.md synchronized
-6. Version format: semver (major.minor.patch)
-7. Local plugins path: `~/.claude/plugins/cache/android-dev-tools/`
-8. If push fails, pull and retry before giving up
+3. **Commit message 使用中文** - 提交到远程的注释必须使用中文
+4. Run from the marketplace root directory
+5. Ensure git is configured with push access
+6. Keep README.md and README_CN.md synchronized
+7. Version format: semver (major.minor.patch)
+8. Local plugins path: `~/.claude/plugins/cache/android-dev-tools/`
+9. If push fails, pull and retry before giving up

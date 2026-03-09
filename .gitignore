@@ -3,3 +3,14 @@
 **/__pycache__/
 *.pyc
 .env
+
+# 异常文件夹（脚本执行错误产生）
+-1
+-r
+cat
+cp
+echo
+ls
+Plugin version:
+Skills:
+✅ Synced to local:
