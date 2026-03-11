@@ -301,14 +301,37 @@ def main():
     # 检查这是否是一个有效的 Android 项目（支持 Groovy DSL 和 Kotlin DSL）
     build_gradle_path = project_root / "app" / "build.gradle"
     build_gradle_kts_path = project_root / "app" / "build.gradle.kts"
-    if not build_gradle_path.exists() and not build_gradle_kts_path.exists():
-        log("ERROR", "这不是一个有效的 Android 项目")
+    app_exists = build_gradle_path.exists() or build_gradle_kts_path.exists()
+
+    # 解析用户指定的模块
+    extra_modules = [
+        m.strip() for m in args.modules.split(",") if m.strip()
+    ] if args.modules else []
+
+    # 如果没有 app 模块且用户没有指定模块，提示用户
+    if not app_exists and not extra_modules:
+        log("ERROR", "未找到 app 模块")
         log("ERROR", f"未找到: {build_gradle_path} 或 {build_gradle_kts_path}")
-        log("INFO", "请使用 --project-path 参数指定正确的 Android 项目路径")
+        log("INFO", "请使用 --modules 参数指定要配置的模块，例如: --modules WidgetEngraving")
         return 1
 
-    # 检测 DSL 类型
-    dsl_type = "Kotlin DSL (.kts)" if build_gradle_kts_path.exists() else "Groovy DSL (.gradle)"
+    # 确定要处理的模块列表
+    if extra_modules:
+        # 用户指定了模块，只处理用户指定的模块
+        all_modules = extra_modules
+    else:
+        # 用户没有指定，默认处理 app 模块
+        all_modules = ["app"]
+
+    # 检测第一个模块的 DSL 类型
+    first_module = all_modules[0]
+    first_gradle_path = project_root / first_module / "build.gradle"
+    first_gradle_kts_path = project_root / first_module / "build.gradle.kts"
+    if not first_gradle_path.exists() and not first_gradle_kts_path.exists():
+        log("ERROR", f"未找到模块 {first_module} 的 build.gradle 文件")
+        return 1
+
+    dsl_type = "Kotlin DSL (.kts)" if first_gradle_kts_path.exists() else "Groovy DSL (.gradle)"
     log("INFO", f"检测到项目类型: {dsl_type}")
 
     print("\n开始配置...")
@@ -328,11 +351,7 @@ def main():
     if not update_gradle_properties(project_root):
         return 1
 
-    # 4. 更新 app/build.gradle（以及额外模块）
-    extra_modules = [
-        m.strip() for m in args.modules.split(",") if m.strip()
-    ] if args.modules else []
-    all_modules = ["app"] + extra_modules
+    # 4. 更新模块的 build.gradle
     total_modules = len(all_modules)
 
     for idx, module_name in enumerate(all_modules, start=1):
