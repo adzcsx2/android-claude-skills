@@ -111,6 +111,7 @@ All scripts are in the `scripts/` directory. Run them via bash.
 | Script | Args | Description |
 |--------|------|-------------|
 | `get-screen.sh` | `[-s serial]` | Dump UI accessibility tree |
+| `debug-screen.sh` | `[-s serial]` | Capture screenshot + UI dump to local files (for precise debugging) |
 
 ### Input Actions
 | Script | Args | Description |
@@ -153,6 +154,15 @@ All scripts are in the `scripts/` directory. Run them via bash.
 - For visual debugging when XML doesn't capture enough info
 - To verify visual state (colors, images, etc.)
 - When the task requires visual confirmation
+
+### When to use debug-screen.sh
+- **Cannot locate a button** - Use screenshot + UI dump together for precise coordinate calculation
+- **UI elements not appearing in XML** - Screenshot shows what's actually on screen
+- **Complex UI debugging** - Compare visual screenshot with XML hierarchy
+- Output files are saved to `/tmp/android_debug_<timestamp>/` with:
+  - `screenshot.png` - Current screen image
+  - `ui_dump.xml` - UI accessibility tree
+- **Auto cleanup**: Only the 5 most recent debug directories are kept
 
 ### When to wake the device
 - Before starting any task (device may have gone to sleep)
@@ -215,6 +225,31 @@ scripts/launch-app.sh "Chrome"
 - Or force close and restart
 
 ## Example Sessions
+
+### Debugging with Screenshot + XML
+
+**User request:** "I can't find the camera button, help me locate it"
+
+```
+1. scripts/check-device.sh
+   → Device connected: Pixel 6
+   → Serial: 1A051FDF6007PA
+
+2. scripts/debug-screen.sh -s 1A051FDF6007PA
+   → Debug files saved to: /tmp/android_debug_20260311_100530/
+   →   - screenshot.png
+   →   - ui_dump.xml
+
+3. [Use Read tool to view screenshot.png]
+   → See current screen visually
+
+4. [Use Read tool to view ui_dump.xml]
+   → Find camera button: bounds="[900,1800][1020,1920]"
+   → Center: x=960, y=1860
+
+5. scripts/tap.sh -s 1A051FDF6007PA 960 1860
+   → Camera button tapped successfully
+```
 
 ### Single Device
 

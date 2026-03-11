@@ -160,6 +160,7 @@ Control Android devices via ADB commands - tap, swipe, type, navigate apps.
 - Tap, swipe, type, key press actions
 - Launch apps, install APKs
 - Take screenshots for visual debugging
+- **NEW:** `debug-screen.sh` - Capture screenshot + UI dump for precise element location
 - Wake device and dismiss lock screen
 
 **Usage:**
