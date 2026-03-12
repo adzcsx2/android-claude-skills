@@ -238,24 +238,56 @@ Generate a detailed update document in `docs/update-list/` for each update:
 | def5678 | 重构完成第一版-铸造流程跑通 |
 ```
 
-### 8.3 How to Collect Document Changes
+### 8.3 What to EXCLUDE from Update Log (CRITICAL)
 
-**Compare old and new document content:**
+**以下内容只有在发生实际变动时才写入更新日志：**
 
-1. **Before generating new docs**, read existing docs content
-2. **After generating new docs**, compare with old content
-3. **Extract changes**:
-   - New sections/chapters added
-   - Sections modified (describe what changed)
+| 内容类型 | 排除规则 |
+|----------|----------|
+| **项目统计** | Activities/Fragments/Services 数量等统计数据，**不变动不写** |
+| **组件列表** | Activity/Fragment 名称列表，**不变动不写** |
+| **通知渠道** | 通知渠道配置，**不变动不写** |
+| **构建变体** | stageEnv/releaseEnv 等配置，**不变动不写** |
+| **依赖库版本** | CameraX/OkHttp/Retrofit 等版本号，**不变动不写** |
+| **技术栈** | Kotlin/MVVM/Room 等技术选型，**不变动不写** |
+
+### 8.4 Comment-Only Changes (Simplified Format)
+
+**如果源文件只是添加了注释（没有代码逻辑变更）：**
+
+```markdown
+### API.md
+
+**变更类型**: 新增注释
+
+**变更内容**:
+- 以下文件新增代码注释：
+  - `BaseApi.kt`
+  - `CenterApi.kt`
+  - `AIApi.kt`
+```
+
+**不要展开列出完整的接口内容，只说明哪些文件增加了注释。**
+
+### 8.5 How to Detect Actual Changes
+
+**Before writing to update log, verify:**
+
+1. **Read existing doc content** before regeneration
+2. **After regeneration**, compare new content with old
+3. **Only record actual differences**:
+   - New sections added
    - Sections removed
+   - Content modified (not just formatting)
+4. **Skip if only metadata changed** (timestamps, etc.)
 
-**Use git diff for tracked docs:**
+**Use git diff for comparison:**
 ```bash
-# Get diff of specific doc
+# Check if doc has actual content changes
 git diff HEAD -- docs/API.md
 
-# Get added/removed lines
-git diff HEAD --unified=0 -- docs/API.md | grep "^[+-]" | grep -v "^[+-]{3}"
+# Ignore whitespace-only changes
+git diff HEAD --ignore-all-space -- docs/API.md
 ```
 
 ---
