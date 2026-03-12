@@ -46,7 +46,7 @@ Android 项目文档自动生成工具。分析项目结构，生成中文技术
 
 ```
 README.md
-├── 最近更新（1条摘要 + 链接到 CHANGELOG）
+├── 最近更新（3条摘要 + 链接到 CHANGELOG）
 └── ...
 
 docs/
