@@ -38,6 +38,23 @@ Read and analyze the following files:
 - `settings.gradle` / `settings.gradle.kts` - Settings
 - `gradle/wrapper/gradle-wrapper.properties` - Gradle version
 
+**CRITICAL: Check Compatibility Before Enabling Optimizations**
+
+Before proposing `android.nonTransitiveRClass=true` or `android.nonFinalResIds=true`, MUST check:
+
+1. **ButterKnife Usage** - Search for `@BindView` annotations:
+   ```bash
+   grep -r "@BindView" --include="*.java" --include="*.kt"
+   ```
+   - If found → `android.nonFinalResIds=false` (ButterKnife requires final R.id)
+
+2. **Cross-Module R References** - Check if library modules reference R resources from other modules:
+   ```bash
+   # Check library modules for R.style, R.layout, R.id references to external resources
+   grep -r "R\.\(style\|layout\|id\|drawable\|color\)" --include="*.java" --include="*.kt" AndroidLibraries/
+   ```
+   - If found → `android.nonTransitiveRClass=false` (library modules need transitive R)
+
 ### Step 2: Check Configuration Status
 
 Create a diagnostic table comparing current vs optimal:
@@ -49,9 +66,12 @@ Create a diagnostic table comparing current vs optimal:
 | 3 | Parallel Execution | ❌/✅ | ... | None |
 | 4 | JVM Heap | ⚠️/✅ | ... | None |
 | 5 | Non-Transitive R | ❌/✅ | ... | - |
-| 6 | Kapt → KSP | ❌/✅ | ... | Medium |
-| 7 | Dynamic Dependencies | ⚠️/✅ | ... | Low |
-| 8 | Repository Order | ❌/✅ | ... | - |
+| 6 | Non-Final Res IDs | ❌/✅ | ... | - |
+| 7 | Kapt → KSP | ❌/✅ | ... | Medium |
+| 8 | Dynamic Dependencies | ⚠️/✅ | ... | Low |
+| 9 | Repository Order | ❌/✅ | ... | - |
+| 10 | ButterKnife Check | ❌/✅ | 如果有@BindView则不能启用nonFinalResIds | - |
+| 11 | Cross-Module R Check | ❌/✅ | 如果有跨模块R引用则不能启用nonTransitiveRClass | - |
 
 ### Step 3: Propose Risk-Level Plans
 
@@ -192,6 +212,48 @@ org.gradle.caching=true
 kapt.incremental.apt=true
 kapt.use.worker.api=true
 ```
+
+### 7. ButterKnife Usage (CRITICAL for nonFinalResIds)
+
+**Detection**: Search for `@BindView` annotations in Java/Kotlin files
+
+```bash
+grep -r "@BindView" --include="*.java" --include="*.kt" .
+```
+
+**Issue**: ButterKnife's `@BindView` annotation requires `final` R.id constants
+
+```java
+// This will FAIL if android.nonFinalResIds=true
+@BindView(R.id.iv_avatar)  // Error: 元素值必须为常量表达式
+ImageView avatarImage;
+```
+
+**Solution**:
+- If ButterKnife is used → `android.nonFinalResIds=false`
+- Or migrate to ViewBinding (recommended)
+
+### 8. Cross-Module R References (CRITICAL for nonTransitiveRClass)
+
+**Detection**: Check if library modules reference R resources from other modules
+
+```bash
+# Check library modules for external R references
+grep -rn "R\.\(style\|layout\|id\|drawable\|color\)" --include="*.java" --include="*.kt" AndroidLibraries/ | grep -v "import.*\.R;"
+```
+
+**Issue**: With `nonTransitiveRClass=true`, each module only sees its own R resources
+
+```java
+// In WheelPicker module, this will FAIL if nonTransitiveRClass=true
+// and Animations_FadeInAndOut is defined in app module
+wheelWindow.setAnimationStyle(R.style.Animations_FadeInAndOut);  // Error: 找不到符号
+```
+
+**Solution**:
+- If cross-module R references exist → `android.nonTransitiveRClass=false`
+- Or move shared resources to a common library module
+- Or reference resources directly in each module
 
 ---
 
@@ -389,7 +451,19 @@ kapt.use.worker.api=true
 # ============================================
 # Android Specific Optimization
 # ============================================
+# ⚠️ PRE-CHECK REQUIRED before enabling these:
+# 1. android.nonTransitiveRClass=true
+#    - Check for cross-module R references in library modules
+#    - If found, set to false or refactor to move resources
+# 2. android.nonFinalResIds=true
+#    - Check for @BindView (ButterKnife) usage
+#    - If found, set to false or migrate to ViewBinding
+
+# Enable ONLY after verifying no cross-module R references
 android.nonTransitiveRClass=true
+
+# Enable ONLY after verifying no ButterKnife usage
+android.nonFinalResIds=true
 ```
 
 ---
@@ -512,6 +586,47 @@ After optimizations, verify:
 - [ ] CI remote cache configured
 - [ ] No configuration-time I/O
 - [ ] All library versions unified
+- [ ] **PRE-CHECK: No ButterKnife usage** (if `nonFinalResIds=true`)
+- [ ] **PRE-CHECK: No cross-module R references** (if `nonTransitiveRClass=true`)
+
+---
+
+## Known Issues Archive
+
+### 2026-03: nonFinalResIds Breaks ButterKnife
+
+**Problem**: After enabling `android.nonFinalResIds=true`, ButterKnife `@BindView` annotations fail with "元素值必须为常量表达式" (element value must be a constant expression).
+
+**Root Cause**: `nonFinalResIds` makes R.id fields non-final, but annotation parameters require compile-time constants.
+
+**Solution**: Check for `@BindView` usage before enabling:
+```bash
+grep -r "@BindView" --include="*.java" --include="*.kt" .
+```
+If found, either:
+1. Set `android.nonFinalResIds=false`
+2. Migrate to ViewBinding
+
+### 2026-03: nonTransitiveRClass Breaks Cross-Module R References
+
+**Problem**: After enabling `android.nonTransitiveRClass=true`, library modules fail with "找不到符号" (symbol not found) when referencing R resources from other modules.
+
+**Root Cause**: `nonTransitiveRClass` makes each module's R class contain only its own resources, not resources from dependencies.
+
+**Example**:
+```java
+// In WheelPicker module, fails if Animations_FadeInAndOut is in app module
+wheelWindow.setAnimationStyle(R.style.Animations_FadeInAndOut);
+```
+
+**Solution**: Check for cross-module R references before enabling:
+```bash
+grep -rn "R\.\(style\|layout\|id\|drawable\|color\)" --include="*.java" --include="*.kt" AndroidLibraries/ | grep -v "import.*\.R;"
+```
+If found, either:
+1. Set `android.nonTransitiveRClass=false`
+2. Move shared resources to a common library module
+3. Define resources locally in each module
 
 ---
 
