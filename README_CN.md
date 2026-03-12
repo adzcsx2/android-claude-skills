@@ -69,9 +69,11 @@
 - 支持增量更新
 - 将根目录 md 文件迁移到 docs/ 目录
 - 更新 README 并添加分类文档快捷链接
-- **新增：** 在 `docs/update-list/` 生成更新 diff 文档
-- **新增：** 维护 `UPDATE_INDEX.md` 更新历史索引（可点击查看详情）
-- **新增：** 在 README 显示最近 3 次更新及快捷入口
+- 在 `docs/update-list/` 生成更新 diff 文档
+- 维护 `UPDATE_INDEX.md` 更新历史索引（可点击查看详情）
+- 在 README 显示最近 3 次更新及快捷入口
+- **新增 (v2.6.0)：** 基于 git log 的变更检测 - 使用 commit message 生成准确的更新摘要
+- **新增 (v2.6.0)：** 在元数据中跟踪提交记录，完整记录变更历史
 
 **用法：**
 ```bash

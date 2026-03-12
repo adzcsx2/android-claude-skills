@@ -58,13 +58,15 @@ Check `docs/.doc-metadata.json`:
 
 ```json
 {
-  "version": "1.1",
+  "version": "1.2",
   "projectType": "android",
   "lastUpdate": "2026-03-04T10:30:00Z",
+  "lastCommit": "abc1234def5678",
   "documents": {
     "PROJECT_OVERVIEW.md": {
       "updatedAt": "2026-03-04T10:30:00Z",
-      "sourceFiles": ["build.gradle", "settings.gradle"]
+      "sourceFiles": ["build.gradle", "settings.gradle"],
+      "lastCommit": "abc1234"
     }
   },
   "updateHistory": [
@@ -74,6 +76,18 @@ Check `docs/.doc-metadata.json`:
       "diffFile": "update-list/update-2026-03-04.md",
       "summary": "更新接口文档、导航文档",
       "documentsUpdated": ["INTERFACES.md", "NAVIGATION.md"],
+      "commits": [
+        {
+          "hash": "abc1234",
+          "message": "修复铸造失败重试逻辑与Toast文案",
+          "files": ["CastDialog.kt", "WCController.kt"]
+        },
+        {
+          "hash": "def5678",
+          "message": "重构图片加载,提高加载效率",
+          "files": ["ImageUrlEx.kt", "AlbumActivity.kt"]
+        }
+      ],
       "filesMigrated": {
         "深色模式适配.md": "docs/features/dark-mode.md"
       }
@@ -92,7 +106,45 @@ Check `docs/.doc-metadata.json`:
 - `updateHistory`: Array of update records (most recent first)
 - `stats`: Aggregate statistics
 
-### 3. Determine Docs to Update
+### 3. Analyze Git Changes (Primary Source)
+
+**IMPORTANT: Git log is the primary source of truth for change detection.**
+
+```bash
+# Get commits since last update (from metadata)
+git log --since="2026-03-01" --oneline --no-merges
+
+# Get changed files in recent commits
+git diff HEAD~5 --name-only
+
+# Get detailed commit info with file changes
+git log -5 --pretty=format:"%h|%s|%ad" --date=short --no-merges
+
+# Get diff stats for specific files
+git diff HEAD~5 --stat -- "*.kt" "*.java"
+```
+
+**Git-based Change Detection:**
+1. Read `docs/.doc-metadata.json` to get `lastUpdate` date
+2. Run `git log --since="{lastUpdate}" --oneline --no-merges` to get new commits
+3. For each commit, get changed files: `git diff-tree --no-commit-id --name-only -r {commit}`
+4. Map changed files to affected documents (see mapping table below)
+5. Store commit messages for update summary generation
+
+**File to Document Mapping:**
+| Source File Pattern | Affected Documents |
+|---------------------|-------------------|
+| `**/*Activity.kt`, `**/*Activity.java` | INTERFACES.md, NAVIGATION.md |
+| `**/*Fragment.kt`, `**/*Fragment.java` | INTERFACES.md, NAVIGATION.md |
+| `**/res/layout/*.xml` | INTERFACES.md |
+| `**/http/*Api.kt`, `**/api/*.kt` | API.md |
+| `AndroidManifest.xml` | COMPONENTS.md, NAVIGATION.md |
+| `build.gradle`, `build.gradle.kts` | BUILD_VARIANTS.md, DEPENDENCIES.md |
+| `**/notification/*`, `*Notification*.kt` | NOTIFICATIONS.md |
+
+### 3.5. Fallback: File Modification Time
+
+If git is not available or no commits found, fall back to file modification time:
 
 ```bash
 # macOS file modification time
@@ -103,7 +155,6 @@ stat -c %Y "filePath"
 ```
 
 If `--force` is true, mark all docs for update.
-If source file mod time > doc update time, mark for update.
 
 ### 4. Analyze Project
 
@@ -201,12 +252,29 @@ mkdir -p docs/update-list
 - Format: `update-YYYY-MM-DD.md`
 - If file exists for today, append timestamp: `update-YYYY-MM-DD-HHMM.md`
 
-3. **Collect change information**:
+3. **Collect Git Commit Information (PRIMARY)**:
+```bash
+# Get commits since last update
+git log --since="{lastUpdate}" --pretty=format:"%h|%s|%b|%ad" --date=short --no-merges
+
+# Get changed files per commit
+for commit in $(git log --since="{lastUpdate}" --format="%h" --no-merges); do
+  echo "=== $commit ==="
+  git diff-tree --no-commit-id --name-only -r $commit
+done
+```
+
+4. **Generate Summary from Commits**:
+- Extract commit messages as the primary source for "变更摘要"
+- Group related commits by feature/module
+- Use commit body for detailed descriptions if available
+
+5. **Collect change information**:
 - List all documents updated in this run
 - Record change type (new/modified/deleted)
-- Record trigger source files for each document
+- Record trigger commits and source files
 
-4. **Write diff document**:
+6. **Write diff document**:
 
 ```markdown
 # 更新详情 - YYYY-MM-DD
@@ -214,22 +282,31 @@ mkdir -p docs/update-list
 ## 更新概览
 - **更新时间**: YYYY-MM-DD HH:MM:SS
 - **更新类型**: 增量更新 / 全量更新
-- **触发方式**: 源文件变更检测 / --force 强制更新
+- **触发方式**: Git 提交分析 / 源文件变更检测 / --force 强制更新
+- **提交范围**: abc1234..def5678 (N commits)
+
+## Git 提交记录
+
+| 提交 | 描述 | 变更文件 |
+|------|------|----------|
+| abc1234 | 修复铸造失败重试逻辑 | `CastDialog.kt`, `WCController.kt` |
+| def5678 | 重构图片加载效率 | `ImageUrlEx.kt`, `AlbumActivity.kt` |
 
 ## 更新的文档
 
 ### {DOCUMENT_NAME}.md
 - **变更类型**: 新增 / 修改
+- **关联提交**: abc1234, def5678
 - **触发源文件**:
-  - `path/to/source/file.kt` (已修改)
-  - `path/to/layout.xml` (已修改)
-- **变更摘要**: 简要描述本次变更内容
+  - `path/to/source/file.kt` (commit: abc1234)
+  - `path/to/layout.xml` (commit: def5678)
+- **变更摘要**: 从 commit message 提取的真实变更描述
 
 ## 迁移的文件
 - `原文件名.md` → `docs/category/新文件名.md`
 
 ## 元数据变更
-- `.doc-metadata.json` 更新时间戳
+- `.doc-metadata.json` 更新时间戳和提交记录
 ```
 
 ### 6.6. Update UPDATE_INDEX.md
@@ -329,18 +406,29 @@ Update `README.md` at project root with categorized doc links and recent updates
 Update `docs/.doc-metadata.json` with:
 
 1. **Update timestamps** for modified documents
-2. **Append to updateHistory** array:
+2. **Update lastCommit** to current HEAD:
+```bash
+git rev-parse HEAD
+```
+3. **Append to updateHistory** array with commit info:
 ```json
 {
   "date": "2026-03-11",
   "type": "incremental",
   "diffFile": "update-list/update-2026-03-11.md",
-  "summary": "更新接口文档、导航文档",
+  "summary": "从 commit messages 提取的摘要",
   "documentsUpdated": ["INTERFACES.md", "NAVIGATION.md"],
+  "commits": [
+    {
+      "hash": "abc1234",
+      "message": "修复铸造失败重试逻辑与Toast文案",
+      "files": ["CastDialog.kt", "WCController.kt"]
+    }
+  ],
   "filesMigrated": {}
 }
 ```
-3. **Update stats** section:
+4. **Update stats** section:
 ```json
 {
   "stats": {
@@ -350,7 +438,7 @@ Update `docs/.doc-metadata.json` with:
   }
 }
 ```
-4. **Append to CHANGELOG.md** with update summary
+5. **Append to CHANGELOG.md** with update summary derived from commits
 
 ---
 
@@ -431,3 +519,6 @@ NotificationChannel\(["']([^"']+)["'],\s*["']([^"']+)["']
 10. **README integration**: Shows last 3 updates with link to full history
 11. **Record limit**: UPDATE_INDEX.md keeps 20 records by default
 12. **Same-day updates**: Append to existing file or create timestamped version
+13. **Git-based detection**: Primary source of truth is git commits, not file modification time
+14. **Commit messages**: Used as the source for "变更摘要" in update documents
+15. **Commit tracking**: Each update record includes associated commit hashes and messages
