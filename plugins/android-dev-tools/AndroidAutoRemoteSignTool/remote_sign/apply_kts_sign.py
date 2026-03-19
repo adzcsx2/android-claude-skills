@@ -471,7 +471,12 @@ def update_app_build_gradle_kts(project_root: Path, module_name: str = "app") ->
         content = _add_lint_packaging(content)
 
         # ========================================
-        # Step 3: 提取 flavor 名称并生成签名任务
+        # Step 3: 为所有 flavor 添加 signingConfig
+        # ========================================
+        content = _add_signing_config_to_flavors(content)
+
+        # ========================================
+        # Step 4: 提取 flavor 名称并生成签名任务
         # ========================================
         flavor_urls = _extract_flavor_urls(content)
         content = _inject_signing_task(content, flavor_urls)
@@ -720,6 +725,64 @@ def _add_lint_packaging(content: str) -> str:
         vb_end += 1
 
     content = content[:vb_end] + LINT_PACKAGING_CODE + content[vb_end:]
+    return content
+
+
+def _add_signing_config_to_flavors(content: str) -> str:
+    """为所有 productFlavors 添加 signingConfig = signingConfigs.getByName("debug")。
+
+    这是为了解决 Android Studio 无法直接运行某些 variant 的问题。
+    原因：AGP 在某些 flavor 组合下无法正确继承 buildTypes 的签名配置。
+
+    Args:
+        content: build.gradle.kts 文件内容
+
+    Returns:
+        修改后的内容
+    """
+    android_idx = content.find("android {")
+    if android_idx == -1:
+        android_idx = content.find("android{")
+    if android_idx == -1:
+        return content
+
+    pf_idx = content.find("productFlavors {", android_idx)
+    if pf_idx == -1:
+        pf_idx = content.find("productFlavors{", android_idx)
+    if pf_idx == -1:
+        return content
+
+    pf_end = _find_block_end(content, pf_idx)
+    if pf_end == -1:
+        return content
+
+    flavors = _find_kts_flavors(content, pf_idx, pf_end)
+
+    # 从后往前处理每个 flavor，避免位置偏移
+    for name, block_start, block_end in reversed(flavors):
+        flavor_content = content[block_start:block_end]
+
+        # 检查是否已有 signingConfig
+        if "signingConfig" in flavor_content:
+            continue
+
+        # 找到 dimension 行之后插入 signingConfig
+        dimension_match = re.search(r'dimension\s*=\s*["\'][^"\']+["\']', flavor_content)
+        if dimension_match:
+            insert_pos = block_start + dimension_match.end()
+            signing_code = '\n            signingConfig = signingConfigs.getByName("debug")'
+            content = content[:insert_pos] + signing_code + content[insert_pos:]
+            log("INFO", f"为 flavor {name} 添加 signingConfig")
+        else:
+            # 没有 dimension 行，在 create 块的 { 后第一个换行处插入
+            first_brace = content.find("{", block_start)
+            if first_brace != -1 and first_brace < block_end:
+                first_newline = content.find("\n", first_brace)
+                if first_newline != -1 and first_newline < block_end:
+                    signing_code = '\n            signingConfig = signingConfigs.getByName("debug")'
+                    content = content[:first_newline + 1] + signing_code + content[first_newline + 1:]
+                    log("INFO", f"为 flavor {name} 添加 signingConfig")
+
     return content
 
 

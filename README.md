@@ -16,6 +16,7 @@ All-in-one Android development toolkit for Claude Code. Install once, get everyt
 | `code-note` | Add Chinese comments to Kotlin/Java source files |
 | `android-adb` | Control Android devices via ADB - tap, swipe, type, navigate |
 | `android-testing` | Comprehensive testing strategy - Unit, Integration, Hilt, Screenshot tests |
+| `auto-ui-test` | Android UI automation testing - Midscene + ADB with doc-driven mode |
 | `update-remote-plugins` | Sync marketplace and update local plugins |
 
 ---
@@ -197,6 +198,64 @@ Comprehensive testing strategy involving Unit, Integration, Hilt, and Screenshot
 
 ---
 
+## auto-ui-test
+
+Android UI automation testing with intelligent mode selection and doc-driven testing.
+
+**Features:**
+- **Dual execution modes:** Midscene visual-driven + ADB fast execution
+- **Doc-driven testing:** Parse test cases from markdown documents
+- **Smart filtering:** Skip PASS cases, only test FAIL/pending cases
+- **Auto report generation:** Reports saved to `docs/test/report/`
+- **Intelligent mode selection:** Auto-choose best execution method
+
+**Usage:**
+```bash
+# Direct execution
+/android-dev-tools:auto-ui-test 点击Toast按钮，等待3秒后截图
+
+# Doc-driven testing (parse document and execute tests)
+/android-dev-tools:auto-ui-test docs/test/UI_TEST_REPORT.md
+```
+
+**Doc-driven Testing:**
+- Automatically parses test cases from markdown documents
+- Skips cases with `PASS` status
+- Executes `FAIL`, `待验证`, or unmarked cases
+- Generates report at `<project>/docs/test/report/UI_TEST_REPORT_YYYYMMDD_HHMMSS.md`
+
+**Supported Document Formats:**
+```markdown
+## 测试用例: TC-001
+**步骤**: 1. 点击按钮 2. 等待3秒
+**状态**: FAIL          # Will be tested
+
+## 测试用例: TC-002
+**步骤**: 1. 进入设置
+**状态**: PASS          # Skipped
+```
+
+**Environment Setup:**
+```bash
+# 1. ADB (required)
+adb version
+
+# 2. Midscene with GLM-4.6V (for visual mode)
+export MIDSCENE_MODEL_API_KEY="your-zhipu-api-key"
+export MIDSCENE_MODEL_NAME="glm-4.6v"
+export MIDSCENE_MODEL_BASE_URL="https://open.bigmodel.cn/api/paas/v4"
+export MIDSCENE_MODEL_FAMILY="glm-v"
+
+# Get API key: https://open.bigmodel.cn/
+```
+
+**Prerequisites:**
+- ADB installed and in PATH
+- Android device with USB debugging enabled
+- (Optional) Midscene API key for visual-driven mode
+
+---
+
 ## Installation
 
 ```bash
@@ -244,6 +303,11 @@ claude_skill/
 │           │   └── references/
 │           ├── android-testing/
 │           │   └── SKILL.md
+│           ├── auto-ui-test/
+│           │   ├── SKILL.md
+│           │   └── references/
+│           │       ├── doc-parser-guide.md
+│           │       └── midscene-reference.md
 │           └── update-remote-plugins/
 │               └── SKILL.md
 ├── README.md            # English

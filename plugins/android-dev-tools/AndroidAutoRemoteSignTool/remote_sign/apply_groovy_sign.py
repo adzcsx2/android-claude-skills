@@ -814,6 +814,31 @@ afterEvaluate {
                         flavor_end += diff
                         log("INFO", f"删除 flavor {flavor_name} 中旧的 signApiUrl 代码")
 
+                # 检查并添加 signingConfig signingConfigs.debug（如果不存在）
+                # 这是为了解决 Android Studio 无法直接运行某些 variant 的问题
+                # 原因：AGP 在某些 flavor 组合下无法正确继承 buildTypes 的签名配置
+                flavor_content = content[flavor_start:flavor_end]
+                if "signingConfig" not in flavor_content:
+                    # 找到 dimension 行之后插入 signingConfig
+                    dimension_match = re.search(r'dimension\s+["\'][^"\']+["\']', flavor_content)
+                    if dimension_match:
+                        # 在 dimension 行后插入
+                        insert_pos = flavor_start + dimension_match.end()
+                        signing_code = f'\n            signingConfig signingConfigs.debug'
+                        content = content[:insert_pos] + signing_code + content[insert_pos:]
+                        flavor_end += len(signing_code)
+                        log("INFO", f"为 flavor {flavor_name} 添加 signingConfig signingConfigs.debug")
+                    else:
+                        # 没有 dimension 行，在 flavor 块开头的 { 后插入
+                        first_brace = content.find("{", flavor_start)
+                        if first_brace != -1 and first_brace < flavor_end:
+                            first_newline = content.find("\n", first_brace)
+                            if first_newline != -1 and first_newline < flavor_end:
+                                signing_code = f'\n            signingConfig signingConfigs.debug'
+                                content = content[:first_newline + 1] + signing_code + content[first_newline + 1:]
+                                flavor_end += len(signing_code)
+                                log("INFO", f"为 flavor {flavor_name} 添加 signingConfig signingConfigs.debug")
+
                 # 根据 flavor 名称判断使用哪个 URL（直接内联URL字符串）
                 if "debug" in flavor_name.lower() or "stage" in flavor_name.lower():
                     url_code = f'\n            ext {{\n                signApiUrl = "{STAGE_SIGN_API_URL_VALUE}"\n            }}\n'

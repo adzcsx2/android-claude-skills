@@ -16,6 +16,7 @@
 | `code-note` | 为 Kotlin/Java 源文件添加中文注释 |
 | `android-adb` | 通过 ADB 控制 Android 设备 - 点击、滑动、输入、导航 |
 | `android-testing` | 全面测试策略 - 单元测试、集成测试、Hilt 测试、截图测试 |
+| `auto-ui-test` | Android UI自动化测试 - Midscene视觉驱动 + ADB快速执行，支持文档驱动测试 |
 | `update-remote-plugins` | 同步 marketplace 并更新本地插件 |
 
 ---
@@ -197,6 +198,64 @@
 
 ---
 
+## auto-ui-test
+
+Android UI 自动化测试，智能选择执行模式，支持文档驱动测试。
+
+**功能：**
+- **双执行模式：** Midscene 视觉驱动 + ADB 快速执行
+- **文档驱动测试：** 从 markdown 文档解析测试用例
+- **智能过滤：** 跳过 PASS 用例，仅测试 FAIL/待验证用例
+- **自动生成报告：** 报告保存到 `docs/test/report/`
+- **智能模式选择：** 自动选择最优执行方式
+
+**用法：**
+```bash
+# 直接执行测试任务
+/android-dev-tools:auto-ui-test 点击Toast按钮，等待3秒后截图
+
+# 文档驱动测试（解析文档并执行测试）
+/android-dev-tools:auto-ui-test docs/test/UI_TEST_REPORT.md
+```
+
+**文档驱动测试：**
+- 自动从 markdown 文档解析测试用例
+- 跳过状态为 `PASS` 的用例
+- 执行 `FAIL`、`待验证` 或无状态的用例
+- 生成报告到 `<项目>/docs/test/report/UI_TEST_REPORT_YYYYMMDD_HHMMSS.md`
+
+**支持的文档格式：**
+```markdown
+## 测试用例: TC-001
+**步骤**: 1. 点击按钮 2. 等待3秒
+**状态**: FAIL          # 将被执行
+
+## 测试用例: TC-002
+**步骤**: 1. 进入设置
+**状态**: PASS          # 跳过
+```
+
+**环境配置：**
+```bash
+# 1. ADB（必需）
+adb version
+
+# 2. Midscene + GLM-4.6V（视觉驱动模式需要）
+export MIDSCENE_MODEL_API_KEY="your-zhipu-api-key"
+export MIDSCENE_MODEL_NAME="glm-4.6v"
+export MIDSCENE_MODEL_BASE_URL="https://open.bigmodel.cn/api/paas/v4"
+export MIDSCENE_MODEL_FAMILY="glm-v"
+
+# 获取 API Key: https://open.bigmodel.cn/
+```
+
+**前置条件：**
+- ADB 已安装并在 PATH 中
+- Android 设备已启用 USB 调试
+- （可选）Midscene API Key 用于视觉驱动模式
+
+---
+
 ## 安装
 
 ```bash
@@ -244,6 +303,11 @@ claude_skill/
 │           │   └── references/
 │           ├── android-testing/
 │           │   └── SKILL.md
+│           ├── auto-ui-test/
+│           │   ├── SKILL.md
+│           │   └── references/
+│           │       ├── doc-parser-guide.md
+│           │       └── midscene-reference.md
 │           └── update-remote-plugins/
 │               └── SKILL.md
 ├── README.md                  # 英文
