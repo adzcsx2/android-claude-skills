@@ -14,8 +14,6 @@
 | `android-i18n` | 审计并生成 4 种语言的国际化资源 |
 | `android-fold-adapter` | 诊断和修复折叠屏适配问题 |
 | `code-note` | 为 Kotlin/Java 源文件添加中文注释 |
-| `android-adb` | 通过 ADB 控制 Android 设备 - 点击、滑动、输入、导航 |
-| `android-testing` | 全面测试策略 - 单元测试、集成测试、Hilt 测试、截图测试 |
 | `auto-ui-test` | Android UI自动化测试 - Midscene视觉驱动 + ADB快速执行，支持文档驱动测试 |
 | `update-remote-plugins` | 同步 marketplace 并更新本地插件 |
 
@@ -156,48 +154,6 @@
 
 ---
 
-## android-adb
-
-通过 ADB 命令控制 Android 设备 - 点击、滑动、输入、导航应用。
-
-**功能：**
-- 感知-动作循环：读取 UI 状态，决定操作
-- 多设备支持，自动检测物理设备/模拟器
-- 点击、滑动、输入、按键操作
-- 启动应用、安装 APK
-- 截图用于视觉调试
-- **新增：** `debug-screen.sh` - 同时获取截图和 UI 层级 XML，用于精确定位元素坐标
-- 唤醒设备并关闭锁屏
-
-**用法：**
-```bash
-/android-dev-tools:android-adb 打开 Chrome 并搜索天气
-/android-dev-tools:android-adb 截个屏
-/android-dev-tools:android-adb 打开设置并启用深色模式
-```
-
-**前置条件：**
-- ADB 已安装并在 PATH 中
-- Android 设备已启用 USB 调试
-- 设备已授权调试
-
----
-
-## android-testing
-
-全面测试策略，涵盖单元测试、集成测试、Hilt 测试和截图测试。
-
-**功能：**
-- 测试金字塔指导（单元测试 → 集成测试 → UI 测试）
-- 使用 Roborazzi 进行截图测试（基于 JVM，无需模拟器）
-- Hilt 依赖注入测试
-- 推荐测试依赖配置（libs.versions.toml）
-- 单元测试、集成测试、截图测试示例
-
-**用法：** `/android-dev-tools:android-testing`
-
----
-
 ## auto-ui-test
 
 Android UI 自动化测试，智能选择执行模式，支持文档驱动测试。
@@ -301,12 +257,6 @@ claude_skill/
 │           ├── android-fold-adapter/
 │           │   └── SKILL.md
 │           ├── code-note/
-│           │   └── SKILL.md
-│           ├── android-adb/
-│           │   ├── SKILL.md
-│           │   ├── scripts/
-│           │   └── references/
-│           ├── android-testing/
 │           │   └── SKILL.md
 │           ├── auto-ui-test/
 │           │   ├── SKILL.md

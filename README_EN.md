@@ -14,8 +14,6 @@ All-in-one Android development toolkit for Claude Code. Install once, get everyt
 | `android-i18n` | Audit and generate i18n resources for 4 languages |
 | `android-fold-adapter` | Diagnose and fix foldable screen adaptation issues |
 | `code-note` | Add Chinese comments to Kotlin/Java source files |
-| `android-adb` | Control Android devices via ADB - tap, swipe, type, navigate |
-| `android-testing` | Comprehensive testing strategy - Unit, Integration, Hilt, Screenshot tests |
 | `auto-ui-test` | Android UI automation testing - Midscene + ADB with doc-driven mode |
 | `update-remote-plugins` | Sync marketplace and update local plugins |
 
@@ -156,48 +154,6 @@ Diagnose and fix Android foldable screen adaptation issues.
 
 ---
 
-## android-adb
-
-Control Android devices via ADB commands - tap, swipe, type, navigate apps.
-
-**Features:**
-- Perception-action loop: read UI state, decide actions
-- Multi-device support with automatic detection
-- Tap, swipe, type, key press actions
-- Launch apps, install APKs
-- Take screenshots for visual debugging
-- **NEW:** `debug-screen.sh` - Capture screenshot + UI dump for precise element location
-- Wake device and dismiss lock screen
-
-**Usage:**
-```bash
-/android-dev-tools:android-adb open Chrome and search for weather
-/android-dev-tools:android-adb take a screenshot
-/android-dev-tools:android-adb open Settings and enable dark mode
-```
-
-**Prerequisites:**
-- ADB installed and in PATH
-- Android device with USB debugging enabled
-- Device authorized for debugging
-
----
-
-## android-testing
-
-Comprehensive testing strategy involving Unit, Integration, Hilt, and Screenshot tests.
-
-**Features:**
-- Testing pyramid guidance (Unit → Integration → UI)
-- Screenshot testing with Roborazzi (JVM-based, no emulator needed)
-- Hilt dependency injection testing
-- Recommended testing dependencies (libs.versions.toml)
-- Unit, Integration, and Screenshot test examples
-
-**Usage:** `/android-dev-tools:android-testing`
-
----
-
 ## auto-ui-test
 
 Android UI automation testing with intelligent mode selection and doc-driven testing.
@@ -301,12 +257,6 @@ claude_skill/
 │           ├── android-fold-adapter/
 │           │   └── SKILL.md
 │           ├── code-note/
-│           │   └── SKILL.md
-│           ├── android-adb/
-│           │   ├── SKILL.md
-│           │   ├── scripts/
-│           │   └── references/
-│           ├── android-testing/
 │           │   └── SKILL.md
 │           ├── auto-ui-test/
 │           │   ├── SKILL.md
