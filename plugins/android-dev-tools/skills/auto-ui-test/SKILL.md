@@ -63,40 +63,25 @@ compatibility: darwin, linux
 
 ## 环境配置
 
-### 1. ADB环境（必需）
+### 前置条件
 
-```bash
-# 检查ADB是否安装
-adb version
+1. **ADB已安装**
+   ```bash
+   # 验证ADB安装
+   adb --version
+   ```
 
-# 如果未安装 (macOS)
-brew install android-platform-tools
+2. **启动 Playground CLI**（用于调试和可视化操作）
+   ```bash
+   npx --yes @midscene/android-playground
+   ```
 
-# 验证设备连接
-adb devices
-```
+3. **集成 Midscene Agent**（项目依赖）
+   ```bash
+   npm install @midscene/android --save-dev
+   ```
 
-### 2. Midscene环境（视觉驱动必需）
-
-```bash
-# 配置智谱GLM-4.6V API（推荐，性价比高）
-export MIDSCENE_MODEL_API_KEY="your-zhipu-api-key"
-export MIDSCENE_MODEL_NAME="glm-4.6v"
-export MIDSCENE_MODEL_BASE_URL="https://open.bigmodel.cn/api/paas/v4"
-export MIDSCENE_MODEL_FAMILY="glm-v"
-
-# 或写入.env文件
-cat > .env << 'EOF'
-MIDSCENE_MODEL_API_KEY=your-zhipu-api-key
-MIDSCENE_MODEL_NAME=glm-4.6v
-MIDSCENE_MODEL_BASE_URL=https://open.bigmodel.cn/api/paas/v4
-MIDSCENE_MODEL_FAMILY=glm-v
-EOF
-
-# 获取智谱API Key: https://open.bigmodel.cn/
-```
-
-### 3. 设备准备
+### 设备准备
 
 ```bash
 # 1. 开启USB调试（手机设置）
@@ -105,19 +90,11 @@ EOF
 # 2. 连接设备并授权
 adb devices
 # 在手机上点击"允许USB调试"
-
-# 3. 验证连接
-adb shell echo "设备已连接"
 ```
 
-### 4. 环境验证
+### 详细文档
 
-```bash
-# 完整环境检查
-adb devices                    # 设备连接
-echo $MIDSCENE_MODEL_API_KEY   # API Key已配置
-npx @midscene/android@1 --version  # Midscene可用
-```
+Midscene Android 完整配置指南: https://midscenejs.com/zh/android-getting-started.html
 
 ---
 

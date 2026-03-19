@@ -236,23 +236,28 @@ Android UI automation testing with intelligent mode selection and doc-driven tes
 ```
 
 **Environment Setup:**
-```bash
-# 1. ADB (required)
-adb version
 
-# 2. Midscene with GLM-4.6V (for visual mode)
-export MIDSCENE_MODEL_API_KEY="your-zhipu-api-key"
-export MIDSCENE_MODEL_NAME="glm-4.6v"
-export MIDSCENE_MODEL_BASE_URL="https://open.bigmodel.cn/api/paas/v4"
-export MIDSCENE_MODEL_FAMILY="glm-v"
+1. **ADB installed**
+   ```bash
+   adb --version
+   ```
 
-# Get API key: https://open.bigmodel.cn/
-```
+2. **Start Playground CLI** (for debugging and visual operations)
+   ```bash
+   npx --yes @midscene/android-playground
+   ```
+
+3. **Integrate Midscene Agent** (project dependency)
+   ```bash
+   npm install @midscene/android --save-dev
+   ```
+
+**Detailed documentation:** https://midscenejs.com/android-getting-started.html
 
 **Prerequisites:**
 - ADB installed and in PATH
 - Android device with USB debugging enabled
-- (Optional) Midscene API key for visual-driven mode
+- Midscene Android integrated in project
 
 ---
 

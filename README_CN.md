@@ -236,23 +236,28 @@ Android UI 自动化测试，智能选择执行模式，支持文档驱动测试
 ```
 
 **环境配置：**
-```bash
-# 1. ADB（必需）
-adb version
 
-# 2. Midscene + GLM-4.6V（视觉驱动模式需要）
-export MIDSCENE_MODEL_API_KEY="your-zhipu-api-key"
-export MIDSCENE_MODEL_NAME="glm-4.6v"
-export MIDSCENE_MODEL_BASE_URL="https://open.bigmodel.cn/api/paas/v4"
-export MIDSCENE_MODEL_FAMILY="glm-v"
+1. **ADB 已安装**
+   ```bash
+   adb --version
+   ```
 
-# 获取 API Key: https://open.bigmodel.cn/
-```
+2. **启动 Playground CLI**（用于调试和可视化操作）
+   ```bash
+   npx --yes @midscene/android-playground
+   ```
+
+3. **集成 Midscene Agent**（项目依赖）
+   ```bash
+   npm install @midscene/android --save-dev
+   ```
+
+**详细文档：** https://midscenejs.com/zh/android-getting-started.html
 
 **前置条件：**
 - ADB 已安装并在 PATH 中
 - Android 设备已启用 USB 调试
-- （可选）Midscene API Key 用于视觉驱动模式
+- 项目已集成 Midscene Android
 
 ---
 
