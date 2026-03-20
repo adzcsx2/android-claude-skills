@@ -8,6 +8,7 @@
 
 | Skill | 描述 |
 |-------|------|
+| `init-android` | 初始化或优化 Android 项目的 claude.md 文件 |
 | `gradle-build-performance` | 调试和优化 Gradle 构建性能 |
 | `apply-remote-sign` | 自动配置远程 APK 签名 |
 | `update-docs` | 生成中文技术文档 |
@@ -16,6 +17,22 @@
 | `code-note` | 为 Kotlin/Java 源文件添加中文注释 |
 | `auto-ui-test` | Android UI自动化测试 - Midscene视觉驱动 + ADB快速执行，支持文档驱动测试 |
 | `update-remote-plugins` | 同步 marketplace 并更新本地插件 |
+
+---
+
+## init-android
+
+初始化或优化 Android 项目的 claude.md 文件。从 Gradle 配置和源码目录检测真实项目结构，合并已有规则，生成简洁的 AI 指导文件。
+
+**功能：**
+- 从 Gradle 配置和源码目录检测真实项目结构
+- 合并已有规则（claude.md、common.mdc）
+- 生成简洁低 token 的 AI 指导文件
+- 四个必须段落：AI 工作原则、单一事实来源、局部一致性规则、项目强约束
+- 文档索引格式校验（仅合法 Markdown 链接）
+- 可选生成 checklist（API、依赖、模块）
+
+**用法：** `/android-dev-tools:init-android`
 
 ---
 
@@ -246,6 +263,8 @@ claude_skill/
 │       │       ├── apply_kts_sign.py
 │       │       └── ...
 │       └── skills/
+│           ├── init-android/
+│           │   └── SKILL.md
 │           ├── gradle-build-performance/
 │           │   └── SKILL.md
 │           ├── apply-remote-sign/

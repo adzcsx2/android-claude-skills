@@ -8,6 +8,7 @@ All-in-one Android development toolkit for Claude Code. Install once, get everyt
 
 | Skill | Description |
 |-------|-------------|
+| `init-android` | Initialize or optimize claude.md for Android projects |
 | `gradle-build-performance` | Debug and optimize Gradle build performance |
 | `apply-remote-sign` | Auto-configure remote APK signing |
 | `update-docs` | Generate Chinese technical documentation |
@@ -16,6 +17,22 @@ All-in-one Android development toolkit for Claude Code. Install once, get everyt
 | `code-note` | Add Chinese comments to Kotlin/Java source files |
 | `auto-ui-test` | Android UI automation testing - Midscene + ADB with doc-driven mode |
 | `update-remote-plugins` | Sync marketplace and update local plugins |
+
+---
+
+## init-android
+
+Initialize or optimize claude.md for Android projects. Detect real project structure from Gradle and source folders, merge existing rules, and generate a concise AI guidance file.
+
+**Features:**
+- Detect real project structure from Gradle configs and source directories
+- Merge existing rules (claude.md, common.mdc)
+- Generate concise low-token AI guidance file
+- Four mandatory sections: AI work principles, single source of truth, local consistency rules, project constraints
+- Document index format validation (Markdown links only)
+- Optional checklist generation (API, dependencies, modules)
+
+**Usage:** `/android-dev-tools:init-android`
 
 ---
 
@@ -246,6 +263,8 @@ claude_skill/
 │       │       ├── apply_kts_sign.py
 │       │       └── ...
 │       └── skills/
+│           ├── init-android/
+│           │   └── SKILL.md
 │           ├── gradle-build-performance/
 │           │   └── SKILL.md
 │           ├── apply-remote-sign/
