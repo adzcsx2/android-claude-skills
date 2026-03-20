@@ -4,7 +4,7 @@ All-in-one Android development toolkit for Claude Code.
 
 ## Version
 
-2.11.2
+2.11.3
 
 ## Included Skills
 

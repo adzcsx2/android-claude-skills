@@ -1,5 +1,5 @@
 ---
-name: init
+name: init-android
 description: Initialize claude.md for Android projects. Analyzes project structure, generates AI development guidelines, build environment config, and creates checklist documents in docs/checklist/.
 ---
 
