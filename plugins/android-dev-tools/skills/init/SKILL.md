@@ -26,7 +26,7 @@ description: Initialize claude.md for Android projects. Analyzes project structu
 ## Trigger
 
 ```
-/init
+/init-android
 ```
 
 ---

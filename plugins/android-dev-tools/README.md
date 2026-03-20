@@ -4,7 +4,7 @@ All-in-one Android development toolkit for Claude Code.
 
 ## Version
 
-2.11.1
+2.11.2
 
 ## Included Skills
 
@@ -23,8 +23,8 @@ All-in-one Android development toolkit for Claude Code.
 ## Usage
 
 ```bash
-# Initialize claude.md for new project
-/init
+# Initialize claude.md for Android project
+/init-android
 
 # Configure remote signing
 /android-dev-tools:apply-remote-sign
