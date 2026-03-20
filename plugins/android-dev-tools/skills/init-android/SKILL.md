@@ -4,7 +4,7 @@ description: Initialize or optimize claude.md for Android projects. Detect real 
 ---
 
 > 中文环境要求
->
+> 
 > - 面向用户的回复、注释、提示信息必须使用中文
 > - AI 内部分析可以使用英文
 > - 所有生成文件必须使用 UTF-8 编码
@@ -292,12 +292,14 @@ description: Initialize or optimize claude.md for Android projects. Detect real 
 ```
 # AI guidance files (generated, do not commit)
 claude.md
+/*.mdc
 docs/checklist/api.md
 docs/checklist/dependencies.md
 docs/checklist/modules.md
 ```
 
 执行方式：
+
 1. 读取项目根目录的 .gitignore
 2. 检查是否已包含上述条目
 3. 如果没有，在文件末尾追加（用空行与已有内容分隔），并注释说明是 AI 生成的文件
