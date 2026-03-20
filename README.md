@@ -31,6 +31,7 @@
 - 四个必须段落：AI 工作原则、单一事实来源、局部一致性规则、项目强约束
 - 文档索引格式校验（仅合法 Markdown 链接）
 - 可选生成 checklist（API、依赖、模块）
+- 自动将 claude.md 和 checklist 文档添加到 .gitignore
 
 **用法：** `/android-dev-tools:init-android`
 

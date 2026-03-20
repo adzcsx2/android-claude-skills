@@ -279,17 +279,29 @@ description: Initialize or optimize claude.md for Android projects. Detect real 
 - 不得预设 common-core、Koin、Hilt、Compose、MMKV 等项目未使用内容
 - 如果信息提取不可靠，则宁可少写，也不要编造
 
-### 10. Optional .gitignore Update
+### 10. Mandatory .gitignore Update（必须执行）
 
-不要默认把 claude.md 加入 .gitignore。
+生成或更新 claude.md 后，**必须**将其添加到项目根目录的 .gitignore。
 
-先询问用户希望：
+如果生成了 docs/checklist/ 下的文档（api.md、dependencies.md、modules.md），也**必须**一并添加到 .gitignore。
 
-- 仅本地使用
-- 团队共享 AI 规则
+这些文件是给 AI 工具看的，不属于项目源码，不应提交到版本控制。
 
-如果用户选择仅本地使用，再建议加入 .gitignore。
-如果用户希望团队共享，则不要加入 .gitignore。
+需要添加到 .gitignore 的条目：
+
+```
+# AI guidance files (generated, do not commit)
+claude.md
+docs/checklist/api.md
+docs/checklist/dependencies.md
+docs/checklist/modules.md
+```
+
+执行方式：
+1. 读取项目根目录的 .gitignore
+2. 检查是否已包含上述条目
+3. 如果没有，在文件末尾追加（用空行与已有内容分隔），并注释说明是 AI 生成的文件
+4. 不要删除或修改 .gitignore 中已有的其他条目
 
 ### 11. Output Standard
 

@@ -31,6 +31,7 @@ Initialize or optimize claude.md for Android projects. Detect real project struc
 - Four mandatory sections: AI work principles, single source of truth, local consistency rules, project constraints
 - Document index format validation (Markdown links only)
 - Optional checklist generation (API, dependencies, modules)
+- Auto-add claude.md and checklist docs to .gitignore
 
 **Usage:** `/android-dev-tools:init-android`
 
