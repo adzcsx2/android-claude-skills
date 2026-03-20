@@ -10,7 +10,7 @@ All-in-one Android development toolkit for Claude Code.
 
 | Skill | Description |
 |-------|-------------|
-| `init` | Initialize claude.md for Android projects. Analyzes project structure, generates AI development guidelines, build environment config, and creates checklist documents in docs/checklist/. |
+| `init-android` | Initialize claude.md for Android projects. Analyzes project structure, generates AI development guidelines, build environment config, and creates checklist documents in docs/checklist/. |
 | `apply-remote-sign` | Automatically configure remote APK signing for Android projects. Supports Groovy DSL (build.gradle) and Kotlin DSL (build.gradle.kts). |
 | `gradle-build-performance` | Debug and optimize Android/Gradle build performance. Use when builds are slow, investigating CI/CD performance, analyzing build scans, or identifying compilation bottlenecks. |
 | `update-docs` | Auto-generate Chinese technical documentation for Android projects. Analyzes structure, generates interfaces, navigation, components, notifications, and API docs. |
@@ -58,7 +58,7 @@ plugins/android-dev-tools/
 ├── .claude-plugin/
 │   └── plugin.json
 ├── skills/
-│   ├── init/
+│   ├── init-android/
 │   │   ├── SKILL.md
 │   │   └── references/
 │   │       └── checklist-templates/
