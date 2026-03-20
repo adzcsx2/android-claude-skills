@@ -185,19 +185,20 @@ Use template with detected values. Key sections:
 7. **编译命令** - gradlew commands with JAVA_HOME
 8. **相关文档** - Links to docs/checklist/
 
-### 9. Create .claude/settings.local.json
+### 9. Update .gitignore
 
-If not exists:
+Check if `.gitignore` exists in project root. If exists, add `claude.md` to prevent it from being uploaded to remote repository.
 
-```json
-{
-  "env": {
-    "JAVA_HOME": "/Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home"
-  },
-  "toolPermissions": {
-    "Bash:./gradlew*": "allow"
-  }
-}
+```bash
+if [ -f ".gitignore" ]; then
+  # Check if claude.md already in .gitignore
+  if ! grep -q "claude.md" .gitignore; then
+    echo "" >> .gitignore
+    echo "# Claude AI 开发规范（本地使用，不上传）" >> .gitignore
+    echo "claude.md" >> .gitignore
+    echo "✅ 已将 claude.md 添加到 .gitignore"
+  fi
+fi
 ```
 
 ### 10. Summary Output
@@ -206,12 +207,13 @@ If not exists:
 ✅ claude.md 已生成
 ✅ docs/checklist/modules.md 已生成
 ✅ docs/checklist/api.md 已生成
-✅ .claude/settings.local.json 已配置
+✅ docs/checklist/dependencies.md 已生成
+✅ .gitignore 已更新（添加 claude.md）
 
 📋 下一步:
 1. 检查 claude.md 内容是否正确
 2. 根据项目实际情况调整 docs/checklist/ 下的清单
-3. 将 claude.md 纳入版本控制
+3. claude.md 已加入 .gitignore，不会上传到远程仓库
 ```
 
 ---
@@ -545,4 +547,5 @@ export JAVA_HOME={JAVA_HOME_PATH}
 3. **Preserve existing files** - Ask before overwriting
 4. **Auto-detect JVM** - Use local.properties or system default
 5. **Link to checklists** - claude.md should reference docs/checklist/ files
-6. **Update version** - Increment plugin version after adding this skill
+6. **Update .gitignore** - Add claude.md to prevent uploading to remote
+7. **JAVA_HOME in claude.md** - JVM environment info is written in claude.md, not in .claude/settings.local.json
