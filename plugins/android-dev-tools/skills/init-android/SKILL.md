@@ -281,7 +281,7 @@ description: Initialize or optimize claude.md for Android projects. Detect real 
 
 ### 10. Mandatory .gitignore Update（必须执行）
 
-生成或更新 claude.md 后，**必须**将其添加到项目根目录的 .gitignore。
+生成或更新 claude.md 和 *.mdc 后，**必须**将其添加到项目根目录的 .gitignore。
 
 如果生成了 docs/checklist/ 下的文档（api.md、dependencies.md、modules.md），也**必须**一并添加到 .gitignore。
 
