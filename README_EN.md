@@ -4,6 +4,83 @@
 
 All-in-one Android development toolkit for Claude Code. Install once, get everything.
 
+---
+
+## Installation
+
+```bash
+npx skills add adzcsx2/android-claude-skills
+```
+
+Or install via Claude Code plugin system:
+
+```bash
+# 1. Add marketplace
+/plugin marketplace add github.com/adzcsx2/claude_skill
+
+# 2. Install (includes all skills)
+/plugin install android-dev-tools@android-dev-tools
+```
+
+---
+
+## Repository Structure
+
+```
+claude_skill/
+├── .claude-plugin/
+│   └── marketplace.json
+├── plugins/
+│   └── android-dev-tools/
+│       ├── .claude-plugin/
+│       │   └── plugin.json
+│       └── skills/
+│           ├── init-android/
+│           │   └── SKILL.md
+│           ├── gradle-build-performance/
+│           │   └── SKILL.md
+│           ├── update-docs/
+│           │   └── SKILL.md
+│           ├── android-i18n/
+│           │   └── SKILL.md
+│           ├── android-fold-adapter/
+│           │   └── SKILL.md
+│           ├── code-note/
+│           │   └── SKILL.md
+│           ├── auto-ui-test/
+│           │   ├── SKILL.md
+│           │   └── references/
+│           │       ├── doc-parser-guide.md
+│           │       └── midscene-reference.md
+│           └── update-remote-plugins/
+│               └── SKILL.md
+├── README.md            # Chinese
+├── README_EN.md         # English
+└── .gitignore
+```
+
+---
+
+## Requirements
+
+- Claude Code CLI
+- For `update-docs`: Android project with standard structure
+
+## Included Skills
+
+| Skill | Description |
+|-------|-------------|
+| `init-android` | Initialize or optimize claude.md for Android projects |
+| `gradle-build-performance` | Debug and optimize Gradle build performance |
+| `update-docs` | Generate Chinese technical documentation |
+| `android-i18n` | Audit and generate i18n resources for 4 languages |
+| `android-fold-adapter` | Diagnose and fix foldable screen adaptation issues |
+| `code-note` | Add Chinese comments to Kotlin/Java source files |
+| `auto-ui-test` | Android UI automation testing - Midscene + ADB with doc-driven mode |
+| `update-remote-plugins` | Sync marketplace and update local plugins |
+
+---
+
 ## init-android
 
 Initialize or optimize claude.md for Android projects. Detect real project structure from Gradle and source folders, merge existing rules, and generate a concise AI guidance file.
@@ -198,81 +275,6 @@ Android UI automation testing with intelligent mode selection and doc-driven tes
 - ADB installed and in PATH
 - Android device with USB debugging enabled
 - Midscene Android integrated in project
-
----
-
-## Installation
-
-```bash
-npx skills add adzcsx2/android-claude-skills
-```
-
-Or install via Claude Code plugin system:
-
-```bash
-# 1. Add marketplace
-/plugin marketplace add github.com/adzcsx2/claude_skill
-
-# 2. Install (includes all skills)
-/plugin install android-dev-tools@android-dev-tools
-```
-
----
-
-## Repository Structure
-
-```
-claude_skill/
-├── .claude-plugin/
-│   └── marketplace.json
-├── plugins/
-│   └── android-dev-tools/
-│       ├── .claude-plugin/
-│       │   └── plugin.json
-│       └── skills/
-│           ├── init-android/
-│           │   └── SKILL.md
-│           ├── gradle-build-performance/
-│           │   └── SKILL.md
-│           ├── update-docs/
-│           │   └── SKILL.md
-│           ├── android-i18n/
-│           │   └── SKILL.md
-│           ├── android-fold-adapter/
-│           │   └── SKILL.md
-│           ├── code-note/
-│           │   └── SKILL.md
-│           ├── auto-ui-test/
-│           │   ├── SKILL.md
-│           │   └── references/
-│           │       ├── doc-parser-guide.md
-│           │       └── midscene-reference.md
-│           └── update-remote-plugins/
-│               └── SKILL.md
-├── README.md            # Chinese
-├── README_EN.md         # English
-└── .gitignore
-```
-
----
-
-## Requirements
-
-- Claude Code CLI
-- For `update-docs`: Android project with standard structure
-
-## Included Skills
-
-| Skill | Description |
-|-------|-------------|
-| `init-android` | Initialize or optimize claude.md for Android projects |
-| `gradle-build-performance` | Debug and optimize Gradle build performance |
-| `update-docs` | Generate Chinese technical documentation |
-| `android-i18n` | Audit and generate i18n resources for 4 languages |
-| `android-fold-adapter` | Diagnose and fix foldable screen adaptation issues |
-| `code-note` | Add Chinese comments to Kotlin/Java source files |
-| `auto-ui-test` | Android UI automation testing - Midscene + ADB with doc-driven mode |
-| `update-remote-plugins` | Sync marketplace and update local plugins |
 
 ---
 

@@ -4,6 +4,83 @@
 
 一站式 Android 开发工具集。安装一次，拥有全部功能。
 
+---
+
+## 安装
+
+```bash
+npx skills add adzcsx2/android-claude-skills
+```
+
+或通过 Claude Code 插件系统安装：
+
+```bash
+# 1. 添加 marketplace
+/plugin marketplace add github.com/adzcsx2/claude_skill
+
+# 2. 安装（包含所有 skills）
+/plugin install android-dev-tools@android-dev-tools
+```
+
+---
+
+## 仓库结构
+
+```
+claude_skill/
+├── .claude-plugin/
+│   └── marketplace.json
+├── plugins/
+│   └── android-dev-tools/
+│       ├── .claude-plugin/
+│       │   └── plugin.json
+│       └── skills/
+│           ├── init-android/
+│           │   └── SKILL.md
+│           ├── gradle-build-performance/
+│           │   └── SKILL.md
+│           ├── update-docs/
+│           │   └── SKILL.md
+│           ├── android-i18n/
+│           │   └── SKILL.md
+│           ├── android-fold-adapter/
+│           │   └── SKILL.md
+│           ├── code-note/
+│           │   └── SKILL.md
+│           ├── auto-ui-test/
+│           │   ├── SKILL.md
+│           │   └── references/
+│           │       ├── doc-parser-guide.md
+│           │       └── midscene-reference.md
+│           └── update-remote-plugins/
+│               └── SKILL.md
+├── README.md                  # 中文
+├── README_EN.md               # 英文
+└── .gitignore
+```
+
+---
+
+## 环境要求
+
+- Claude Code CLI
+- `update-docs` 需要：标准结构的 Android 项目
+
+## 包含的 Skills
+
+| Skill | 描述 |
+|-------|------|
+| `init-android` | 初始化或优化 Android 项目的 claude.md 文件 |
+| `gradle-build-performance` | 调试和优化 Gradle 构建性能 |
+| `update-docs` | 生成中文技术文档 |
+| `android-i18n` | 审计并生成 4 种语言的国际化资源 |
+| `android-fold-adapter` | 诊断和修复折叠屏适配问题 |
+| `code-note` | 为 Kotlin/Java 源文件添加中文注释 |
+| `auto-ui-test` | Android UI自动化测试 - Midscene视觉驱动 + ADB快速执行，支持文档驱动测试 |
+| `update-remote-plugins` | 同步 marketplace 并更新本地插件 |
+
+---
+
 ## init-android
 
 初始化或优化 Android 项目的 claude.md 文件。从 Gradle 配置和源码目录检测真实项目结构，合并已有规则，生成简洁的 AI 指导文件。
@@ -198,81 +275,6 @@ Android UI 自动化测试，智能选择执行模式，支持文档驱动测试
 - ADB 已安装并在 PATH 中
 - Android 设备已启用 USB 调试
 - 项目已集成 Midscene Android
-
----
-
-## 安装
-
-```bash
-npx skills add adzcsx2/android-claude-skills
-```
-
-或通过 Claude Code 插件系统安装：
-
-```bash
-# 1. 添加 marketplace
-/plugin marketplace add github.com/adzcsx2/claude_skill
-
-# 2. 安装（包含所有 skills）
-/plugin install android-dev-tools@android-dev-tools
-```
-
----
-
-## 仓库结构
-
-```
-claude_skill/
-├── .claude-plugin/
-│   └── marketplace.json
-├── plugins/
-│   └── android-dev-tools/
-│       ├── .claude-plugin/
-│       │   └── plugin.json
-│       └── skills/
-│           ├── init-android/
-│           │   └── SKILL.md
-│           ├── gradle-build-performance/
-│           │   └── SKILL.md
-│           ├── update-docs/
-│           │   └── SKILL.md
-│           ├── android-i18n/
-│           │   └── SKILL.md
-│           ├── android-fold-adapter/
-│           │   └── SKILL.md
-│           ├── code-note/
-│           │   └── SKILL.md
-│           ├── auto-ui-test/
-│           │   ├── SKILL.md
-│           │   └── references/
-│           │       ├── doc-parser-guide.md
-│           │       └── midscene-reference.md
-│           └── update-remote-plugins/
-│               └── SKILL.md
-├── README.md                  # 中文
-├── README_EN.md               # 英文
-└── .gitignore
-```
-
----
-
-## 环境要求
-
-- Claude Code CLI
-- `update-docs` 需要：标准结构的 Android 项目
-
-## 包含的 Skills
-
-| Skill | 描述 |
-|-------|------|
-| `init-android` | 初始化或优化 Android 项目的 claude.md 文件 |
-| `gradle-build-performance` | 调试和优化 Gradle 构建性能 |
-| `update-docs` | 生成中文技术文档 |
-| `android-i18n` | 审计并生成 4 种语言的国际化资源 |
-| `android-fold-adapter` | 诊断和修复折叠屏适配问题 |
-| `code-note` | 为 Kotlin/Java 源文件添加中文注释 |
-| `auto-ui-test` | Android UI自动化测试 - Midscene视觉驱动 + ADB快速执行，支持文档驱动测试 |
-| `update-remote-plugins` | 同步 marketplace 并更新本地插件 |
 
 ---
 
