@@ -10,7 +10,6 @@
 |-------|------|
 | `init-android` | 初始化或优化 Android 项目的 claude.md 文件 |
 | `gradle-build-performance` | 调试和优化 Gradle 构建性能 |
-| `apply-remote-sign` | 自动配置远程 APK 签名 |
 | `update-docs` | 生成中文技术文档 |
 | `android-i18n` | 审计并生成 4 种语言的国际化资源 |
 | `android-fold-adapter` | 诊断和修复折叠屏适配问题 |
@@ -53,24 +52,6 @@
 - Groovy DSL 和 Kotlin DSL 示例
 
 **用法：** `/android-dev-tools:gradle-build-performance`
-
----
-
-## apply-remote-sign
-
-为 Android 项目自动配置远程 APK 签名。
-
-**功能：**
-- 支持 Groovy DSL (`build.gradle`) 和 Kotlin DSL (`build.gradle.kts`)
-- 创建 `.env.example` 模板
-- 更新 `.gitignore` 和 `gradle.properties`
-- 集成签名任务到构建脚本
-- 内置 AndroidAutoRemoteSignTool 工具
-
-**用法：**
-```bash
-/android-dev-tools:apply-remote-sign [项目路径] [--modules 模块1,模块2]
-```
 
 ---
 
@@ -238,6 +219,12 @@ Android UI 自动化测试，智能选择执行模式，支持文档驱动测试
 ## 安装
 
 ```bash
+npx skills add adzcsx2/android-claude-skills
+```
+
+或通过 Claude Code 插件系统安装：
+
+```bash
 # 1. 添加 marketplace
 /plugin marketplace add github.com/adzcsx2/claude_skill
 
@@ -257,18 +244,10 @@ claude_skill/
 │   └── android-dev-tools/
 │       ├── .claude-plugin/
 │       │   └── plugin.json
-│       ├── AndroidAutoRemoteSignTool/   # 内置工具
-│       │   └── remote_sign/
-│       │       ├── apply_remote_sign.py
-│       │       ├── apply_groovy_sign.py
-│       │       ├── apply_kts_sign.py
-│       │       └── ...
 │       └── skills/
 │           ├── init-android/
 │           │   └── SKILL.md
 │           ├── gradle-build-performance/
-│           │   └── SKILL.md
-│           ├── apply-remote-sign/
 │           │   └── SKILL.md
 │           ├── update-docs/
 │           │   └── SKILL.md
@@ -295,7 +274,6 @@ claude_skill/
 ## 环境要求
 
 - Claude Code CLI
-- `apply-remote-sign` 需要：Python 3.6+、`requests` 库、JDK 11、Android SDK
 - `update-docs` 需要：标准结构的 Android 项目
 
 ---

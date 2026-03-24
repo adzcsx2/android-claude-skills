@@ -10,7 +10,6 @@ All-in-one Android development toolkit for Claude Code. Install once, get everyt
 |-------|-------------|
 | `init-android` | Initialize or optimize claude.md for Android projects |
 | `gradle-build-performance` | Debug and optimize Gradle build performance |
-| `apply-remote-sign` | Auto-configure remote APK signing |
 | `update-docs` | Generate Chinese technical documentation |
 | `android-i18n` | Audit and generate i18n resources for 4 languages |
 | `android-fold-adapter` | Diagnose and fix foldable screen adaptation issues |
@@ -53,24 +52,6 @@ Debug and optimize Android/Gradle build performance.
 - Groovy DSL and Kotlin DSL examples
 
 **Usage:** `/android-dev-tools:gradle-build-performance`
-
----
-
-## apply-remote-sign
-
-Auto-configure remote APK signing for Android projects.
-
-**Features:**
-- Supports Groovy DSL (`build.gradle`) and Kotlin DSL (`build.gradle.kts`)
-- Creates `.env.example` template
-- Updates `.gitignore` and `gradle.properties`
-- Integrates signing tasks into build scripts
-- Includes AndroidAutoRemoteSignTool (built-in)
-
-**Usage:**
-```bash
-/android-dev-tools:apply-remote-sign [project_path] [--modules module1,module2]
-```
 
 ---
 
@@ -238,6 +219,12 @@ Android UI automation testing with intelligent mode selection and doc-driven tes
 ## Installation
 
 ```bash
+npx skills add adzcsx2/android-claude-skills
+```
+
+Or install via Claude Code plugin system:
+
+```bash
 # 1. Add marketplace
 /plugin marketplace add github.com/adzcsx2/claude_skill
 
@@ -257,18 +244,10 @@ claude_skill/
 │   └── android-dev-tools/
 │       ├── .claude-plugin/
 │       │   └── plugin.json
-│       ├── AndroidAutoRemoteSignTool/   # Built-in tool
-│       │   └── remote_sign/
-│       │       ├── apply_remote_sign.py
-│       │       ├── apply_groovy_sign.py
-│       │       ├── apply_kts_sign.py
-│       │       └── ...
 │       └── skills/
 │           ├── init-android/
 │           │   └── SKILL.md
 │           ├── gradle-build-performance/
-│           │   └── SKILL.md
-│           ├── apply-remote-sign/
 │           │   └── SKILL.md
 │           ├── update-docs/
 │           │   └── SKILL.md
@@ -295,7 +274,6 @@ claude_skill/
 ## Requirements
 
 - Claude Code CLI
-- For `apply-remote-sign`: Python 3.6+, `requests` library, JDK 11, Android SDK
 - For `update-docs`: Android project with standard structure
 
 ---
