@@ -4,21 +4,6 @@
 
 All-in-one Android development toolkit for Claude Code. Install once, get everything.
 
-## Included Skills
-
-| Skill | Description |
-|-------|-------------|
-| `init-android` | Initialize or optimize claude.md for Android projects |
-| `gradle-build-performance` | Debug and optimize Gradle build performance |
-| `update-docs` | Generate Chinese technical documentation |
-| `android-i18n` | Audit and generate i18n resources for 4 languages |
-| `android-fold-adapter` | Diagnose and fix foldable screen adaptation issues |
-| `code-note` | Add Chinese comments to Kotlin/Java source files |
-| `auto-ui-test` | Android UI automation testing - Midscene + ADB with doc-driven mode |
-| `update-remote-plugins` | Sync marketplace and update local plugins |
-
----
-
 ## init-android
 
 Initialize or optimize claude.md for Android projects. Detect real project structure from Gradle and source folders, merge existing rules, and generate a concise AI guidance file.
@@ -275,6 +260,19 @@ claude_skill/
 
 - Claude Code CLI
 - For `update-docs`: Android project with standard structure
+
+## Included Skills
+
+| Skill | Description |
+|-------|-------------|
+| `init-android` | Initialize or optimize claude.md for Android projects |
+| `gradle-build-performance` | Debug and optimize Gradle build performance |
+| `update-docs` | Generate Chinese technical documentation |
+| `android-i18n` | Audit and generate i18n resources for 4 languages |
+| `android-fold-adapter` | Diagnose and fix foldable screen adaptation issues |
+| `code-note` | Add Chinese comments to Kotlin/Java source files |
+| `auto-ui-test` | Android UI automation testing - Midscene + ADB with doc-driven mode |
+| `update-remote-plugins` | Sync marketplace and update local plugins |
 
 ---
 

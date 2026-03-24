@@ -4,21 +4,6 @@
 
 一站式 Android 开发工具集。安装一次，拥有全部功能。
 
-## 包含的 Skills
-
-| Skill | 描述 |
-|-------|------|
-| `init-android` | 初始化或优化 Android 项目的 claude.md 文件 |
-| `gradle-build-performance` | 调试和优化 Gradle 构建性能 |
-| `update-docs` | 生成中文技术文档 |
-| `android-i18n` | 审计并生成 4 种语言的国际化资源 |
-| `android-fold-adapter` | 诊断和修复折叠屏适配问题 |
-| `code-note` | 为 Kotlin/Java 源文件添加中文注释 |
-| `auto-ui-test` | Android UI自动化测试 - Midscene视觉驱动 + ADB快速执行，支持文档驱动测试 |
-| `update-remote-plugins` | 同步 marketplace 并更新本地插件 |
-
----
-
 ## init-android
 
 初始化或优化 Android 项目的 claude.md 文件。从 Gradle 配置和源码目录检测真实项目结构，合并已有规则，生成简洁的 AI 指导文件。
@@ -275,6 +260,19 @@ claude_skill/
 
 - Claude Code CLI
 - `update-docs` 需要：标准结构的 Android 项目
+
+## 包含的 Skills
+
+| Skill | 描述 |
+|-------|------|
+| `init-android` | 初始化或优化 Android 项目的 claude.md 文件 |
+| `gradle-build-performance` | 调试和优化 Gradle 构建性能 |
+| `update-docs` | 生成中文技术文档 |
+| `android-i18n` | 审计并生成 4 种语言的国际化资源 |
+| `android-fold-adapter` | 诊断和修复折叠屏适配问题 |
+| `code-note` | 为 Kotlin/Java 源文件添加中文注释 |
+| `auto-ui-test` | Android UI自动化测试 - Midscene视觉驱动 + ADB快速执行，支持文档驱动测试 |
+| `update-remote-plugins` | 同步 marketplace 并更新本地插件 |
 
 ---
 
