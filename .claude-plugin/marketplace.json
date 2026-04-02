@@ -10,7 +10,7 @@
       "name": "android-dev-tools",
       "source": "./plugins/android-dev-tools",
       "description": "All-in-one Android development toolkit. Includes: init-android, gradle-build-performance, update-docs, android-i18n, android-fold-adapter, code-note, auto-ui-test, push, and update-remote-plugins skills.",
-      "version": "2.14.3"
+      "version": "2.14.4"
     }
   ]
 }

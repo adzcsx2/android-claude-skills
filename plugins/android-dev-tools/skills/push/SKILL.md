@@ -71,21 +71,18 @@ git status --porcelain
 
 在提交之前，先拉取远程最新代码，避免推送时冲突。
 
-**执行流程**（按顺序尝试，任一步成功即停止）：
+**执行流程**：
 
-1. **检查是否有未提交的变更** — 如果有，先 `git stash` 保存，拉取完成后 `git stash pop` 恢复
-2. **检测当前分支和远程追踪关系**：
+1. **检测当前分支名和远程名**：
    ```bash
-   # 获取当前分支名
    BRANCH=$(git branch --show-current)
-   # 获取默认远程名（优先 origin）
    REMOTE=$(git remote | head -1)
-   # 获取远程同名分支（如果存在）
-   TRACKING=$(git config "branch.${BRANCH}.merge" && echo "has_tracking" || echo "no_tracking")
    ```
+2. **检查是否有未提交的变更** — 如果有，先 `git stash` 保存，拉取完成后 `git stash pop` 恢复
 3. **执行拉取**：
-   - **有 tracking 信息** → `git pull --rebase`
-   - **无 tracking 信息** → `git pull --rebase $REMOTE $BRANCH`
+   ```bash
+   git pull --rebase $REMOTE $BRANCH
+   ```
 4. **如果 stash 了变更** → 执行 `git stash pop` 恢复工作区
 
 **冲突处理策略**：
@@ -259,8 +256,7 @@ git push $REMOTE $BRANCH
 **如果推送失败**（远程有新提交），执行重试：
 
 ```bash
-# 根据是否有 tracking 信息选择命令
-git pull --rebase || git pull --rebase $REMOTE $BRANCH
+git pull --rebase $REMOTE $BRANCH
 ```
 
 - **如果 rebase 无冲突** → 直接 `git push origin HEAD`
