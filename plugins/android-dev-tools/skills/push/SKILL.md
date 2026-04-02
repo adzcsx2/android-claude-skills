@@ -257,17 +257,17 @@ git pull --rebase
 
 首先检查 tag 是否已存在：
 ```bash
-git tag -l "vX.Y.Z"
+git tag -l "X.Y.Z"
 ```
 
 - **tag 不存在** → 创建并推送：
   ```bash
-  git tag "vX.Y.Z"
-  git push origin "vX.Y.Z"
+  git tag "X.Y.Z"
+  git push origin "X.Y.Z"
   ```
 - **tag 已存在** → 提示用户，询问是否删除重建或跳过
 
-Tag 命名格式：`v` + 版本号，例如 `v1.2.2`
+Tag 命名格式：直接使用用户提供的版本号，例如 `1.2.2`
 
 ---
 
@@ -275,7 +275,7 @@ Tag 命名格式：`v` + 版本号，例如 `v1.2.2`
 
 执行完成后，远程仓库应包含：
 - N 个新 commit（每个文件一个 commit + 可选的版本号 commit + 可选的文档 commit）
-- 可选：1 个新 tag（`vX.Y.Z`）
+- 可选：1 个新 tag（`X.Y.Z`）
 
 ## Anti-Patterns
 
@@ -292,6 +292,6 @@ Tag 命名格式：`v` + 版本号，例如 `v1.2.2`
 5. 如果某个文件的变更只有代码格式化，commit message 中标注为 `style`
 6. push 失败时自动重试一次，冲突无法解决时交给用户
 7. 本 skill 不会修改 `build.gradle`、`build.gradle.kts` 等构建配置文件中的版本号
-8. Tag 格式统一为 `v` + semver，例如 `v1.2.2`
+8. Tag 直接使用用户提供的版本号，不添加 `v` 前缀，例如 `1.2.2`
 9. Step 3 在 Step 4 之前执行，Step 3 提交的文件不会在 Step 4 中重复提交
 10. Step 1 提前拉取代码，大幅降低 Step 6 推送时的冲突概率
