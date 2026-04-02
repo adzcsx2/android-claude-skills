@@ -52,6 +52,8 @@ claude_skill/
 │           │   └── references/
 │           │       ├── doc-parser-guide.md
 │           │       └── midscene-reference.md
+│           ├── push/
+│           │   └── SKILL.md
 │           └── update-remote-plugins/
 │               └── SKILL.md
 ├── README.md            # Chinese
@@ -77,6 +79,7 @@ claude_skill/
 | `android-fold-adapter` | Diagnose and fix foldable screen adaptation issues |
 | `code-note` | Add Chinese comments to Kotlin/Java source files |
 | `auto-ui-test` | Android UI automation testing - Midscene + ADB with doc-driven mode |
+| `push` | One-push release: update version in docs, per-file commit, generate docs, push to remote |
 | `update-remote-plugins` | Sync marketplace and update local plugins |
 
 ---
@@ -275,6 +278,28 @@ Android UI automation testing with intelligent mode selection and doc-driven tes
 - ADB installed and in PATH
 - Android device with USB debugging enabled
 - Midscene Android integrated in project
+
+---
+
+## push
+
+One-push release workflow: update version in docs, per-file commit, generate update docs, push to remote.
+
+**Features:**
+- Optionally update document version numbers to a specified version
+- Generate independent commit for each staged file
+- Auto-invoke update-docs to generate project update documentation
+- Push to remote repository
+- Support creating version tags
+
+**Usage:**
+```bash
+# Normal push
+/android-dev-tools:push
+
+# With version (update doc version + create tag)
+/android-dev-tools:push 1.2.2
+```
 
 ---
 

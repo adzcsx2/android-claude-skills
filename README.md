@@ -52,6 +52,8 @@ claude_skill/
 │           │   └── references/
 │           │       ├── doc-parser-guide.md
 │           │       └── midscene-reference.md
+│           ├── push/
+│           │   └── SKILL.md
 │           └── update-remote-plugins/
 │               └── SKILL.md
 ├── README.md                  # 中文
@@ -77,6 +79,7 @@ claude_skill/
 | `android-fold-adapter` | 诊断和修复折叠屏适配问题 |
 | `code-note` | 为 Kotlin/Java 源文件添加中文注释 |
 | `auto-ui-test` | Android UI自动化测试 - Midscene视觉驱动 + ADB快速执行，支持文档驱动测试 |
+| `push` | 一键发布：更新文档版本号、逐文件提交、生成文档、推送到远程 |
 | `update-remote-plugins` | 同步 marketplace 并更新本地插件 |
 
 ---
@@ -275,6 +278,28 @@ Android UI 自动化测试，智能选择执行模式，支持文档驱动测试
 - ADB 已安装并在 PATH 中
 - Android 设备已启用 USB 调试
 - 项目已集成 Midscene Android
+
+---
+
+## push
+
+一键发布工作流：更新文档版本号、逐文件提交、生成更新文档、推送到远程仓库。
+
+**功能：**
+- 可选更新文档版本号到指定版本
+- 对暂存区每个文件生成独立的 commit
+- 自动调用 update-docs 生成项目更新文档
+- 推送到远程仓库
+- 支持创建版本 tag
+
+**用法：**
+```bash
+# 普通推送
+/android-dev-tools:push
+
+# 指定版本号（更新文档版本号 + 创建 tag）
+/android-dev-tools:push 1.2.2
+```
 
 ---
 
