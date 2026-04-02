@@ -1,6 +1,6 @@
 ---
 name: push
-description: One-push release workflow: update version in docs, per-file commit, generate docs, push to remote with optional tag.
+description: One-push release workflow: auto git add all changes, pull latest, per-file commit, generate docs, push to remote with optional tag.
 argument-hint: "[version] 例如 /push 1.2.2"
 ---
 
@@ -15,17 +15,20 @@ argument-hint: "[version] 例如 /push 1.2.2"
 
 # push Skill
 
-一键发布工作流：更新文档版本号、逐文件提交、生成更新文档、推送到远程仓库。
+一键发布工作流：自动暂存所有变更、拉取最新代码、逐文件提交、生成更新文档、推送到远程仓库。
+
+**重要：所有 git 命令均在用户当前工作目录执行。**
 
 ## When to Use
 
-- 开发完成，准备将暂存区代码推送到远程仓库
+- 开发完成，准备将代码推送到远程仓库
 - 发版时需要更新文档版本号并创建 tag
 - 需要自动生成提交信息并逐文件提交
+- 工作区有未暂存的变更，需要一键提交推送
 
 ## Example Prompts
 
-- `/android-dev-tools:push` - 推送暂存区代码到远程
+- `/android-dev-tools:push` - 自动暂存所有变更，逐文件提交，生成文档，推送到远程
 - `/android-dev-tools:push 1.2.2` - 更新文档版本号到 1.2.2，提交并打 tag
 
 ---
@@ -34,7 +37,7 @@ argument-hint: "[version] 例如 /push 1.2.2"
 
 | Parameter | Description |
 |-----------|-------------|
-| No args | 逐文件提交暂存区代码，生成文档，推送到远程 |
+| No args | 自动 git add 所有变更，逐文件提交，生成文档，推送到远程 |
 | `X.Y.Z` | 额外将文档中的版本号更新为指定版本，并创建 tag |
 
 ---
@@ -52,11 +55,8 @@ git rev-parse --is-inside-work-tree
 # 2. 确认 remote origin 存在
 git remote get-url origin
 
-# 3. 确认工作区干净（无未暂存的变更）
-git diff --quiet
-
-# 4. 确认暂存区有内容
-git diff --cached --quiet
+# 3. 确认工作区有变更（已暂存或未暂存）
+git status --porcelain
 ```
 
 **检查结果处理**：
@@ -65,24 +65,80 @@ git diff --cached --quiet
 |--------|--------|
 | 非 git 仓库 | 提示用户，退出 |
 | 无 remote origin | 提示用户，退出 |
-| 工作区不干净 | 提示用户先暂存或提交工作区变更，退出 |
-| 暂存区为空 | 提示用户没有需要提交的更改，退出 |
+| 工作区无任何变更 | 提示用户没有需要提交的更改，退出 |
 
-### Step 1: Parse Arguments
+### Step 1: 拉取最新代码并处理冲突
+
+在提交之前，先拉取远程最新代码，避免推送时冲突。
+
+```bash
+git pull --rebase
+```
+
+**冲突处理策略**：
+
+#### 无冲突
+
+直接继续下一步。
+
+#### 简单冲突（自动解决）
+
+以下情况自动解决，无需用户介入：
+
+| 冲突类型 | 解决方式 |
+|---------|---------|
+| 一方删除、另一方未修改 | 接受删除 |
+| 一方修改、另一方未修改 | 接受修改方的版本 |
+| 一方新增文件、另一方无操作 | 保留新增文件 |
+| 仅换行/空白符差异 | `git checkout --theirs` 保留远程版本 |
+
+解决后执行：
+```bash
+git add <resolved files>
+git rebase --continue
+```
+
+#### 复杂冲突（提示用户）
+
+以下情况需要用户手动处理：
+
+| 冲突类型 | 原因 |
+|---------|------|
+| 双方修改了同一文件的同一区域 | 无法自动判断应保留哪个版本 |
+| 冲突涉及 3 个以上文件 | 影响范围大，需要人工判断 |
+| 二进制文件冲突 | 无法合并内容 |
+
+处理流程：
+1. 暂停当前流程
+2. 显示冲突详情（哪些文件、冲突内容摘要）
+3. 提示用户手动解决冲突
+4. 用户解决后，执行 `git add <resolved files>` + `git rebase --continue`
+5. 重新执行 `/android-dev-tools:push` 继续剩余流程
+
+```bash
+# 用户手动解决冲突后，执行：
+git add <resolved files>
+git rebase --continue
+
+# 然后重新执行：
+/android-dev-tools:push
+```
+
+### Step 2: Parse Arguments
 
 从 `args` 中提取版本号（可选）。
 
 **如果提供了版本号**，校验格式是否为 semver (`X.Y.Z`)：
 - 格式不合法 → 提示用户并退出
-- 格式合法 → 进入 Step 2
+- 格式合法 → 进入 Step 3
 
-**如果未提供版本号** → 跳过 Step 2，直接进入 Step 3
+**如果未提供版本号** → 跳过 Step 3，直接进入 Step 4
 
-### Step 2: Update Version in Documents (Only when version is provided)
+### Step 3: Update Version in Documents (Only when version is provided)
 
 扫描项目中的文档文件，将版本号更新为指定版本。
 
-**重要：此步骤在 Step 3 之前执行，此步骤提交的文件不会出现在 Step 3 的暂存区扫描中。**
+**重要：此步骤在 Step 4 之前执行，此步骤提交的文件不会出现在 Step 4 的文件扫描中。**
 
 **需要检查并更新的文件（按优先级）**：
 
@@ -115,22 +171,29 @@ git add <changed doc files>
 git commit -m "chore: bump version to X.Y.Z"
 ```
 
-### Step 3: Per-File Commit for Staged Changes
+### Step 4: Per-File Commit for All Changes
 
-**获取暂存区文件列表**：
+自动暂存所有工作区变更，然后逐文件提交。
+
+**添加所有变更**：
 ```bash
-git diff --cached --name-only
+git add .
 ```
 
-**对每个暂存文件生成独立 commit**。
+**获取变更文件列表**（基于 HEAD）：
+```bash
+git diff HEAD --name-only
+```
+
+**对每个文件生成独立 commit**。
 
 执行逻辑（伪代码，非直接运行的脚本）：
 
-1. 读取暂存区文件列表，按文件路径排序
+1. 读取变更文件列表，按文件路径排序
 2. 对每个文件：
-   a. `git diff --cached -- <file>` 分析该文件的具体变更内容
-   b. 根据变更内容生成 commit message（中文）
-   c. `git reset HEAD -- <file>` 将文件从暂存区取出
+   a. `git reset HEAD -- <file>` 将文件从暂存区取出
+   b. `git diff -- <file>` 分析该文件的具体变更内容（相对于工作区）
+   c. 根据变更内容生成 commit message（中文）
    d. `git add <file>` 重新暂存该文件
    e. `git commit -m "<message>"` 提交
    f. **如果 commit 失败**（如 pre-commit hook 拒绝）→ 停止循环，保留当前状态，提示用户处理
@@ -152,7 +215,7 @@ git diff --cached --name-only
 - 描述要具体，包含文件中的关键变更点
 - 保持简洁，一行描述清楚即可
 
-### Step 4: Generate Update Documents
+### Step 5: Generate Update Documents
 
 读取并执行 `update-docs` skill 的指令来生成项目更新文档：
 
@@ -162,7 +225,7 @@ git diff --cached --name-only
 文档生成完成后，检查是否有文档变更：
 
 ```bash
-git diff --name-only -- docs/
+git diff HEAD --name-only -- docs/
 ```
 
 如果有变更，提交：
@@ -173,24 +236,22 @@ git commit -m "docs: 更新项目文档"
 
 如果文档没有变化，跳过此提交。
 
-### Step 5: Push to Remote
+### Step 6: Push to Remote
 
 **推送代码**：
 ```bash
 git push origin HEAD
 ```
 
-**如果推送失败**（远程有新提交），执行以下重试流程：
+**如果推送失败**（远程有新提交），执行重试：
 
 ```bash
 git pull --rebase
 ```
 
 - **如果 rebase 无冲突** → 直接 `git push origin HEAD`
-- **如果有冲突**：
-  1. 读取冲突文件，尝试自动解决（保留双方变更）
-  2. 如果能解决 → `git add <resolved files>` → `git rebase --continue` → `git push origin HEAD`
-  3. **如果冲突无法自动解决** → 停止，提示用户手动处理冲突，执行 `/android-dev-tools:push` 重新推送
+- **如果有简单冲突** → 自动解决（参见 Step 1 的冲突处理策略）
+- **如果有复杂冲突** → 停止，提示用户手动处理冲突，执行 `/android-dev-tools:push` 重新推送
 
 **创建 Tag（仅当提供了版本号时）**：
 
@@ -218,17 +279,19 @@ Tag 命名格式：`v` + 版本号，例如 `v1.2.2`
 
 ## Anti-Patterns
 
-- **不要在暂存区包含多个相互依赖的文件时使用**：逐文件提交可能导致中间 commit 引用不存在的代码。如果文件之间有依赖关系，考虑在运行前先手动提交它们。
-- **不要连续执行两次**：第二次执行时暂存区已为空，会直接退出。
+- **不要在多个文件有强依赖关系时使用**：逐文件提交可能导致中间 commit 引用不存在的代码。如果文件之间有依赖关系，考虑在运行前先手动提交它们。
+- **不要在非 git 仓库中执行**：Step 0 会检查并退出。
 - **不要在非 Android 项目中使用**：update-docs 步骤会校验项目类型，非 Android 项目会失败。
 
 ## Notes
 
-1. 所有 commit message 使用中文
-2. 逐文件提交时，按文件路径的字母顺序依次提交
-3. 版本号仅更新文档中的记录，不修改项目构建文件（build.gradle 等）
-4. 如果某个文件的变更只有代码格式化，commit message 中标注为 `style`
-5. push 失败时自动重试一次，冲突无法解决时交给用户
-6. 本 skill 不会修改 `build.gradle`、`build.gradle.kts` 等构建配置文件中的版本号
-7. Tag 格式统一为 `v` + semver，例如 `v1.2.2`
-8. Step 2 在 Step 3 之前执行，Step 2 提交的文件不会在 Step 3 中重复提交
+1. **所有 git 命令在用户当前工作目录执行**，不是 ~/.claude 或插件目录
+2. 所有 commit message 使用中文
+3. 逐文件提交时，按文件路径的字母顺序依次提交
+4. 版本号仅更新文档中的记录，不修改项目构建文件（build.gradle 等）
+5. 如果某个文件的变更只有代码格式化，commit message 中标注为 `style`
+6. push 失败时自动重试一次，冲突无法解决时交给用户
+7. 本 skill 不会修改 `build.gradle`、`build.gradle.kts` 等构建配置文件中的版本号
+8. Tag 格式统一为 `v` + semver，例如 `v1.2.2`
+9. Step 3 在 Step 4 之前执行，Step 3 提交的文件不会在 Step 4 中重复提交
+10. Step 1 提前拉取代码，大幅降低 Step 6 推送时的冲突概率

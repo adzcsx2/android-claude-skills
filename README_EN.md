@@ -88,7 +88,7 @@ claude_skill/
 | `android-fold-adapter` | Diagnose and fix foldable screen adaptation issues |
 | `code-note` | Add Chinese comments to Kotlin/Java source files |
 | `auto-ui-test` | Android UI automation testing - Midscene + ADB with doc-driven mode |
-| `push` | One-push release: update version in docs, per-file commit, generate docs, push to remote |
+| `push` | One-push release: auto-add, pull latest, per-file commit, push with conflict handling |
 | `update-remote-plugins` | Audit & generate skill READMEs, sync marketplace, update local plugins |
 
 ---
@@ -293,11 +293,12 @@ Android UI automation testing with intelligent mode selection and doc-driven tes
 
 ## push
 
-One-push release workflow: update version in docs, per-file commit, generate update docs, push to remote.
+One-push release workflow: auto-add all changes, pull latest code, per-file commit, generate update docs, push to remote.
 
 **Features:**
-- Optionally update document version numbers to a specified version
-- Generate independent commit for each staged file
+- Auto `git add` all working directory changes, no manual staging needed
+- Auto `git pull` before each commit, simple conflicts auto-resolved, complex conflicts pause for user
+- Generate independent commit for each file
 - Auto-invoke update-docs to generate project update documentation
 - Push to remote repository
 - Support creating version tags
@@ -310,6 +311,8 @@ One-push release workflow: update version in docs, per-file commit, generate upd
 # With version (update doc version + create tag)
 /android-dev-tools:push 1.2.2
 ```
+
+All git commands execute in the user's current working directory.
 
 ---
 
