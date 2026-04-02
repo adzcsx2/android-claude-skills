@@ -1,6 +1,6 @@
 ---
 name: update-remote-plugins
-description: Sync marketplace.json, plugin.json, and README files, then commit and push to remote. Also syncs changes to local Claude Code plugins directory.
+description: Audit and generate per-skill README.md, sync marketplace.json, plugin.json, and README files, then commit and push to remote. Also syncs changes to local Claude Code plugins directory.
 ---
 
 > **中文环境要求**
@@ -14,7 +14,7 @@ description: Sync marketplace.json, plugin.json, and README files, then commit a
 
 # Update Remote Plugins
 
-Sync marketplace.json with plugins directory, update both English and Chinese README files, then commit and push to remote. Finally, sync to local Claude Code plugins directory.
+Audit and generate per-skill README.md files, sync marketplace.json with plugins directory, update both English and Chinese README files, then commit and push to remote. Finally, sync to local Claude Code plugins directory.
 
 ## When to Use
 
@@ -22,6 +22,7 @@ Sync marketplace.json with plugins directory, update both English and Chinese RE
 - To release a new version of the plugin
 - To sync English and Chinese documentation
 - After adding new skills or updating existing ones
+- To regenerate per-skill README.md files from SKILL.md content
 
 ## Trigger
 
@@ -70,7 +71,100 @@ If changes detected, determine version bump:
 - **New skill / feature** → minor (+0.1.0): 1.0.0 → 1.1.0
 - **Breaking change** → major (+1.0.0): 1.0.0 → 2.0.0
 
-### 4. Update Configuration Files
+### 4. Audit and Generate Skill READMEs
+
+在更新配置文件之前，确保每个 skill 目录都有最新的 README.md。
+
+#### 4a. 识别需要审计的 skill
+
+结合 Step 3 的变更检测结果，确定哪些 skill 需要处理：
+
+```bash
+# 获取变更的 skill 目录列表
+# 路径格式: plugins/android-dev-tools/skills/{skill-name}/SKILL.md，skill-name 在第4段
+CHANGED_SKILLS=$(git diff HEAD --name-only -- plugins/android-dev-tools/skills/ \
+  | cut -d'/' -f4 \
+  | sort -u)
+```
+
+需要审计的 skill：
+- **有变更的 skill** — SKILL.md 被修改，README.md 需要重新生成
+- **缺少 README.md 的 skill** — 无论是否变更，都需创建
+
+#### 4b. 检查每个 skill 目录
+
+扫描所有 skill 目录，检查 README.md 是否存在：
+
+```bash
+for skill_dir in plugins/android-dev-tools/skills/*/; do
+  skill_name=$(basename "$skill_dir")
+  if [ ! -f "${skill_dir}README.md" ]; then
+    echo "MISSING: ${skill_name}/README.md"
+  fi
+done
+```
+
+#### 4c. 生成或更新 README.md
+
+对每个需要处理的 skill，读取其 SKILL.md 内容，提取以下信息并生成 README.md：
+
+**提取规则：**
+
+| README 字段 | SKILL.md 来源 |
+|---|---|
+| 标题 | frontmatter 中的 `name` 字段 |
+| 一句话描述 | H1 标题后的第一段文字（翻译为中文） |
+| 功能列表 | `## When to Use`、`## 功能概述` 或其他功能描述段落（翻译为中文） |
+| 用法 | `## Trigger`、`## Example Prompts`、`## 使用方法`、`## Command Parameters` 等段落 |
+
+**README.md 模板：**
+
+```markdown
+# {skill-name}
+
+{一句话中文描述}
+
+---
+
+## 功能
+
+{功能列表，每项一行，以 - 开头}
+
+## 用法
+
+{用法示例，保留原始代码块格式}
+
+---
+
+> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/android-dev-tools:update-remote-plugins`。
+```
+
+**关键规则：**
+- SKILL.md 是唯一真相来源，README.md 完全从 SKILL.md 派生
+- 所有内容必须使用中文（英文段落需翻译）
+- 保持所有 skill 的 README 格式一致
+- README.md 末尾必须包含自动生成声明
+- 如果 SKILL.md 没有变更且 README.md 已存在，跳过该 skill
+- 如果 SKILL.md 有变更但 README.md 内容仍然准确，仍然重新生成以确保一致性
+
+#### 4d. 验证生成结果
+
+确认每个 skill 目录现在都有 README.md：
+
+```bash
+for skill_dir in plugins/android-dev-tools/skills/*/; do
+  skill_name=$(basename "$skill_dir")
+  if [ ! -f "${skill_dir}README.md" ]; then
+    echo "ERROR: ${skill_name}/README.md 仍然缺失！"
+  else
+    echo "OK: ${skill_name}/README.md"
+  fi
+done
+```
+
+如有缺失，重新生成。
+
+### 5. Update Configuration Files
 
 **plugin.json** - Update version and description in `plugins/android-dev-tools/.claude-plugin/plugin.json`
 
@@ -89,7 +183,7 @@ Without `skills` field, Claude Code will NOT load any skills from the plugin.
 
 **marketplace.json** - Update version in `.claude-plugin/marketplace.json`
 
-### 5. Sync README Files
+### 6. Sync README Files
 
 **README.md (English)** - Update skills table:
 ```markdown
@@ -107,7 +201,7 @@ Without `skills` field, Claude Code will NOT load any skills from the plugin.
 - Update skills table
 - Update repository structure section
 
-### 6. Commit and Push (Robust)
+### 7. Commit and Push (Robust)
 
 Stage and commit changes:
 ```bash
@@ -128,7 +222,7 @@ git push || {
 }
 ```
 
-### 7. Sync Local Plugins (CRITICAL)
+### 8. Sync Local Plugins (CRITICAL)
 
 **ALWAYS sync to BOTH cache AND marketplace directories** - Claude Code reads from both locations.
 
@@ -166,7 +260,7 @@ echo "=== Marketplace skills ==="
 ls -1 "$MARKETPLACE_PATH/skills/"
 ```
 
-### 8. Update installed_plugins.json (If Needed)
+### 9. Update installed_plugins.json (If Needed)
 
 Verify `~/.claude/plugins/installed_plugins.json` points to correct version:
 ```bash
@@ -187,6 +281,7 @@ When syncing README.md and README_CN.md:
 4. **Removed skills** - Remove from both files
 5. **Version number** - Update in both files
 6. **Repository structure** - Update to show all skill directories
+7. **Skill-level README.md** - Each skill directory must have a README.md generated from its SKILL.md content, following the standard template
 
 ---
 
@@ -242,7 +337,7 @@ git push
 
 **Cause:** Local plugins directory not synced after push
 
-**Solution:** Run Step 7 (Sync Local Plugins) manually - sync BOTH cache AND marketplace directories.
+**Solution:** Run Step 8 (Sync Local Plugins) manually - sync BOTH cache AND marketplace directories.
 
 ### Issue 5: Stash Conflicts After Rebase
 
@@ -277,7 +372,7 @@ Add `skills` field to `plugin.json`:
 }
 ```
 
-Then re-sync to local directories (Step 7).
+Then re-sync to local directories (Step 8).
 
 ### Issue 7: Skills Not Loading - Marketplace Not Synced
 
@@ -376,27 +471,45 @@ rm -f ~/.claude/plugins/cache/android-dev-tools/android-dev-tools/2.4.0/.orphane
 
 ## Complete Example Execution
 
+> **Note:** 以下为精简示例，步骤编号与上方详细工作流（Steps 1-9）不完全对应。
+
 ```bash
-# 1. Pull latest (ALWAYS FIRST)
+# 1. Pull latest (Step 1)
 git pull --rebase
 
-# 2. Check for changes
+# 2. Check for changes (Step 3)
 CHANGES=$(git diff HEAD --name-only -- plugins/)
 
-# 3. If changes exist, update version and files
+# 3. If changes exist, audit skill READMEs and update version (Steps 4-5)
 if [ -n "$CHANGES" ]; then
+  # Identify changed skills
+  CHANGED_SKILLS=$(echo "$CHANGES" | cut -d'/' -f4 | sort -u)
+
+  # Check all skills for missing README.md
+  for skill_dir in plugins/android-dev-tools/skills/*/; do
+    skill_name=$(basename "$skill_dir")
+    skill_md="${skill_dir}SKILL.md"
+    readme_md="${skill_dir}README.md"
+
+    # Generate README if SKILL.md changed or README.md missing
+    if echo "$CHANGED_SKILLS" | grep -q "$skill_name" || [ ! -f "$readme_md" ]; then
+      echo "Generating README for: $skill_name"
+      # Read SKILL.md, extract fields, write README.md
+    fi
+  done
+
   # Read current version and bump
   CURRENT=$(cat plugins/android-dev-tools/.claude-plugin/plugin.json | grep '"version"' | head -1 | cut -d'"' -f4)
   # ... bump version logic ...
 
-  # Update README files
+  # Update README files (Step 6)
   # Sync skills table between README.md and README_CN.md
 
   # ENSURE plugin.json has skills field!
   # "skills": ["./skills/"]
 fi
 
-# 4. Commit and push
+# 4. Commit and push (Step 7)
 git add .claude-plugin/marketplace.json README.md README_CN.md plugins/android-dev-tools/
 git commit -m "feat: 更新插件至 v$NEW_VERSION"
 
@@ -406,7 +519,7 @@ git push || {
   git push
 }
 
-# 5. Sync to local (BOTH cache AND marketplace!)
+# 5. Sync to local (Step 8, BOTH cache AND marketplace!)
 CACHE_PATH="$HOME/.claude/plugins/cache/android-dev-tools/android-dev-tools/$NEW_VERSION"
 MARKETPLACE_PATH="$HOME/.claude/plugins/marketplaces/android-dev-tools/plugins/android-dev-tools"
 
@@ -420,6 +533,10 @@ cp README.md README_CN.md "$CACHE_PATH/"
 mkdir -p "$MARKETPLACE_PATH/skills" "$MARKETPLACE_PATH/.claude-plugin"
 cp -r plugins/android-dev-tools/skills/* "$MARKETPLACE_PATH/skills/"
 cp plugins/android-dev-tools/.claude-plugin/plugin.json "$MARKETPLACE_PATH/.claude-plugin/"
+
+# 6. Verify installed_plugins.json (Step 9)
+cat ~/.claude/plugins/installed_plugins.json | grep -A5 "android-dev-tools"
+# If version mismatch, update manually
 
 echo "✅ Synced to local plugins"
 ```
@@ -443,3 +560,5 @@ echo "✅ Synced to local plugins"
     - Installed: `~/.claude/plugins/installed_plugins.json`
 11. If push fails, pull and retry before giving up
 12. Clean up old versions to avoid version confusion
+13. Each skill directory must have a README.md generated from its SKILL.md content
+14. README.md files are auto-generated -- edit SKILL.md instead and re-run this skill

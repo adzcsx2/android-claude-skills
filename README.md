@@ -36,26 +36,35 @@ claude_skill/
 │       │   └── plugin.json
 │       └── skills/
 │           ├── init-android/
-│           │   └── SKILL.md
+│           │   ├── SKILL.md
+│           │   └── README.md
 │           ├── gradle-build-performance/
-│           │   └── SKILL.md
+│           │   ├── SKILL.md
+│           │   └── README.md
 │           ├── update-docs/
-│           │   └── SKILL.md
+│           │   ├── SKILL.md
+│           │   └── README.md
 │           ├── android-i18n/
-│           │   └── SKILL.md
+│           │   ├── SKILL.md
+│           │   └── README.md
 │           ├── android-fold-adapter/
-│           │   └── SKILL.md
+│           │   ├── SKILL.md
+│           │   └── README.md
 │           ├── code-note/
-│           │   └── SKILL.md
+│           │   ├── SKILL.md
+│           │   └── README.md
 │           ├── auto-ui-test/
 │           │   ├── SKILL.md
+│           │   ├── README.md
 │           │   └── references/
 │           │       ├── doc-parser-guide.md
 │           │       └── midscene-reference.md
 │           ├── push/
-│           │   └── SKILL.md
+│           │   ├── SKILL.md
+│           │   └── README.md
 │           └── update-remote-plugins/
-│               └── SKILL.md
+│               ├── SKILL.md
+│               └── README.md
 ├── README.md                  # 中文
 ├── README_EN.md               # 英文
 └── .gitignore
@@ -80,7 +89,7 @@ claude_skill/
 | `code-note` | 为 Kotlin/Java 源文件添加中文注释 |
 | `auto-ui-test` | Android UI自动化测试 - Midscene视觉驱动 + ADB快速执行，支持文档驱动测试 |
 | `push` | 一键发布：更新文档版本号、逐文件提交、生成文档、推送到远程 |
-| `update-remote-plugins` | 同步 marketplace 并更新本地插件 |
+| `update-remote-plugins` | 审计生成 Skill README，同步 marketplace 并更新本地插件 |
 
 ---
 
@@ -169,9 +178,10 @@ claude_skill/
 
 ## update-remote-plugins
 
-同步 marketplace.json 与插件目录，并更新 README 文件。
+同步 marketplace.json 与插件目录，审计生成每个 skill 的 README.md，并更新 README 文件。
 
 **功能：**
+- 审计并生成每个 skill 目录的 README.md（从 SKILL.md 自动提取）
 - 扫描插件目录变更
 - 插件修改时自动升级版本号
 - 添加/移除插件到 marketplace.json

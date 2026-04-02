@@ -36,26 +36,35 @@ claude_skill/
 │       │   └── plugin.json
 │       └── skills/
 │           ├── init-android/
-│           │   └── SKILL.md
+│           │   ├── SKILL.md
+│           │   └── README.md
 │           ├── gradle-build-performance/
-│           │   └── SKILL.md
+│           │   ├── SKILL.md
+│           │   └── README.md
 │           ├── update-docs/
-│           │   └── SKILL.md
+│           │   ├── SKILL.md
+│           │   └── README.md
 │           ├── android-i18n/
-│           │   └── SKILL.md
+│           │   ├── SKILL.md
+│           │   └── README.md
 │           ├── android-fold-adapter/
-│           │   └── SKILL.md
+│           │   ├── SKILL.md
+│           │   └── README.md
 │           ├── code-note/
-│           │   └── SKILL.md
+│           │   ├── SKILL.md
+│           │   └── README.md
 │           ├── auto-ui-test/
 │           │   ├── SKILL.md
+│           │   ├── README.md
 │           │   └── references/
 │           │       ├── doc-parser-guide.md
 │           │       └── midscene-reference.md
 │           ├── push/
-│           │   └── SKILL.md
+│           │   ├── SKILL.md
+│           │   └── README.md
 │           └── update-remote-plugins/
-│               └── SKILL.md
+│               ├── SKILL.md
+│               └── README.md
 ├── README.md            # Chinese
 ├── README_EN.md         # English
 └── .gitignore
@@ -80,7 +89,7 @@ claude_skill/
 | `code-note` | Add Chinese comments to Kotlin/Java source files |
 | `auto-ui-test` | Android UI automation testing - Midscene + ADB with doc-driven mode |
 | `push` | One-push release: update version in docs, per-file commit, generate docs, push to remote |
-| `update-remote-plugins` | Sync marketplace and update local plugins |
+| `update-remote-plugins` | Audit & generate skill READMEs, sync marketplace, update local plugins |
 
 ---
 
@@ -169,9 +178,10 @@ Add Chinese comments to Kotlin/Java source files.
 
 ## update-remote-plugins
 
-Sync marketplace.json with plugins directory and update README files.
+Sync marketplace.json with plugins directory, audit & generate per-skill README.md, and update README files.
 
 **Features:**
+- Audit and generate README.md for each skill directory (extracted from SKILL.md)
 - Scan plugins directory for changes
 - Auto-bump versions on plugin modifications
 - Add/remove plugins from marketplace.json
