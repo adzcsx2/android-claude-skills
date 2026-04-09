@@ -1,7 +1,7 @@
 {
   "name": "android-dev-tools",
   "description": "All-in-one Android development toolkit. Includes: init-android (claude.md generator with checklist support), gradle-build-performance (build optimization), update-docs (documentation generation), android-i18n (internationalization), android-fold-adapter (foldable screen support), code-note (Chinese code comments), auto-ui-test (Midscene + ADB UI automation testing with doc-driven mode), push (auto-add, pull, per-file commit, push with conflict handling), and update-remote-plugins (marketplace management with per-skill README generation).",
-  "version": "2.14.4",
+  "version": "2.14.5",
   "author": {
     "name": "adzcsx2",
     "url": "https://github.com/adzcsx2"

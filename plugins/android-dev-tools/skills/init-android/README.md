@@ -13,7 +13,7 @@
 - 识别复用入口：BaseActivity/BaseFragment、工具类、公共网络封装、资源规则
 - 四个必须段落：AI 工作原则、单一事实来源、局部一致性规则、项目强约束
 - 可选生成 checklist（API、依赖、模块），仅在明确请求时生成
-- 自动更新 .gitignore，排除 AI 生成的文件
+- 不再自动更新 .gitignore，AI 生成文件可提交到版本控制共享
 
 ## 用法
 
