@@ -13,7 +13,8 @@
 - 更新 plugin.json 和 marketplace.json 版本号
 - 同步中英文 README 文件的 Skills 表格
 - 提交并推送到远程仓库（含重试逻辑）
-- 同步到本地 cache 和 marketplace 两个目录（Claude Code 从两个位置读取）
+- 同步到本地 cache 目录（通过 cp）和 marketplace 目录（通过 git pull，必须是 git 仓库）
+- 首次安装时注册 3 个配置文件（settings.json、known_marketplaces.json、installed_plugins.json）
 - 验证 installed_plugins.json 版本一致性
 
 ## 用法

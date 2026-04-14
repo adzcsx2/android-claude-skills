@@ -233,34 +233,69 @@ VERSION=$(cat plugins/android-dev-tools/.claude-plugin/plugin.json | grep '"vers
 # Cache path (primary)
 CACHE_PATH="$HOME/.claude/plugins/cache/android-dev-tools/android-dev-tools/$VERSION"
 
-# Marketplace path (also required!)
-MARKETPLACE_PATH="$HOME/.claude/plugins/marketplaces/android-dev-tools/plugins/android-dev-tools"
+# Marketplace path (git clone, NOT manual copy!)
+MARKETPLACE_PATH="$HOME/.claude/plugins/marketplaces/android-dev-tools"
 
 # === Sync to CACHE directory ===
 mkdir -p "$CACHE_PATH/skills" "$CACHE_PATH/.claude-plugin"
 cp -r plugins/android-dev-tools/skills/* "$CACHE_PATH/skills/"
 cp plugins/android-dev-tools/.claude-plugin/plugin.json "$CACHE_PATH/.claude-plugin/"
 cp README.md README_CN.md "$CACHE_PATH/"
-echo "✅ Synced to cache: $CACHE_PATH"
+echo "Synced to cache: $CACHE_PATH"
 
-# === Sync to MARKETPLACE directory ===
-mkdir -p "$MARKETPLACE_PATH/skills" "$MARKETPLACE_PATH/.claude-plugin"
-cp -r plugins/android-dev-tools/skills/* "$MARKETPLACE_PATH/skills/"
-cp plugins/android-dev-tools/.claude-plugin/plugin.json "$MARKETPLACE_PATH/.claude-plugin/"
-
-# Update marketplace.json version
-MARKETPLACE_JSON="$HOME/.claude/plugins/marketplaces/android-dev-tools/.claude-plugin/marketplace.json"
-# Use sed or manual edit to update version in marketplace.json
-echo "✅ Synced to marketplace: $MARKETPLACE_PATH"
+# === Sync to MARKETPLACE directory (git pull, NOT cp!) ===
+# CRITICAL: Claude Code requires marketplace to be a git clone.
+# If the directory doesn't exist or has no .git, clone it first.
+if [ ! -d "$MARKETPLACE_PATH/.git" ]; then
+  echo "Marketplace not a git repo, cloning..."
+  rm -rf "$MARKETPLACE_PATH"
+  git clone git@github.com:adzcsx2/claude_skill.git "$MARKETPLACE_PATH"
+else
+  echo "Marketplace is git repo, pulling latest..."
+  git -C "$MARKETPLACE_PATH" pull
+fi
 
 # Verify
 echo "=== Cache skills ==="
 ls -1 "$CACHE_PATH/skills/"
 echo "=== Marketplace skills ==="
-ls -1 "$MARKETPLACE_PATH/skills/"
+ls -1 "$MARKETPLACE_PATH/plugins/android-dev-tools/skills/"
 ```
 
-### 9. Update installed_plugins.json (If Needed)
+### 9. Register Plugin (First Install Only)
+
+**CRITICAL: Without these registrations, Claude Code will NOT load the plugin.**
+
+手动安装插件需要修改以下 3 个文件：
+
+#### 9a. Add to known_marketplaces.json
+
+Ensure `~/.claude/plugins/known_marketplaces.json` has an entry:
+```json
+{
+  "android-dev-tools": {
+    "source": {
+      "source": "git",
+      "url": "git@github.com:adzcsx2/claude_skill.git"
+    },
+    "installLocation": "/Users/hoyn/.claude/plugins/marketplaces/android-dev-tools",
+    "lastUpdated": "2026-03-04T09:19:04.809Z"
+  }
+}
+```
+
+#### 9b. Add to enabledPlugins in settings.json
+
+Ensure `~/.claude/settings.json` has the plugin enabled:
+```json
+{
+  "enabledPlugins": {
+    "android-dev-tools@android-dev-tools": true
+  }
+}
+```
+
+#### 9c. Update installed_plugins.json
 
 Verify `~/.claude/plugins/installed_plugins.json` points to correct version:
 ```bash
@@ -374,21 +409,24 @@ Add `skills` field to `plugin.json`:
 
 Then re-sync to local directories (Step 8).
 
-### Issue 7: Skills Not Loading - Marketplace Not Synced
+### Issue 7: Skills Not Loading - Marketplace Not a Git Repo
 
 **Symptoms:**
-- New skill works in some windows but not others
-- Cache directory has the skill, but skill still not available
+- Plugin files exist in marketplace directory but skills are not available
+- New Claude Code window doesn't load the plugin
 
-**Root Cause:** Claude Code reads from both `cache` and `marketplaces` directories. If marketplace directory is outdated, skills won't load.
+**Root Cause:** Claude Code requires the marketplace directory to be a valid git clone (with `.git/`). Manual `cp` copies won't work.
 
 **Solution:**
-Sync to BOTH directories:
+Replace manual copy with git clone:
 ```bash
-# Sync to marketplace
-MARKETPLACE_PATH="$HOME/.claude/plugins/marketplaces/android-dev-tools/plugins/android-dev-tools"
-cp -r plugins/android-dev-tools/skills/* "$MARKETPLACE_PATH/skills/"
-cp plugins/android-dev-tools/.claude-plugin/plugin.json "$MARKETPLACE_PATH/.claude-plugin/"
+rm -rf ~/.claude/plugins/marketplaces/android-dev-tools
+git clone git@github.com:adzcsx2/claude_skill.git ~/.claude/plugins/marketplaces/android-dev-tools
+```
+
+For subsequent updates, use `git pull`:
+```bash
+git -C ~/.claude/plugins/marketplaces/android-dev-tools pull
 ```
 
 ### Issue 8: installed_plugins.json Version Mismatch
@@ -423,6 +461,30 @@ Remove the orphaned marker:
 ```bash
 rm -f ~/.claude/plugins/cache/android-dev-tools/android-dev-tools/2.4.0/.orphaned_at
 ```
+
+### Issue 10: Plugin Not Loading - Missing Registration
+
+**Symptoms:**
+- Plugin files exist in cache and marketplace directories
+- `plugin.json` has `skills` field
+- But plugin still not available in new Claude Code windows
+
+**Root Cause:** Claude Code requires plugin registration in 3 config files. If any is missing, the plugin won't load.
+
+**Solution:**
+Verify and fix all 3 registration points:
+```bash
+# 1. Check enabledPlugins in settings.json
+grep "android-dev-tools" ~/.claude/settings.json
+
+# 2. Check known_marketplaces.json
+grep "android-dev-tools" ~/.claude/plugins/known_marketplaces.json
+
+# 3. Check installed_plugins.json
+grep "android-dev-tools" ~/.claude/plugins/installed_plugins.json
+```
+
+If any is missing, add it. See Step 9 for detailed format.
 
 ---
 
@@ -547,7 +609,7 @@ echo "✅ Synced to local plugins"
 
 1. **ALWAYS pull first** - Avoid conflicts by syncing with remote before starting
 2. **ALWAYS sync to local** - New Claude Code windows need the updated plugin
-3. **Sync BOTH cache AND marketplace** - Claude Code reads from both directories
+3. **Sync cache via cp, marketplace via git pull** - Claude Code reads from both directories，marketplace 必须是 git 仓库
 4. **plugin.json MUST have skills field** - Without it, no skills will load
 5. **Commit message 使用中文** - 提交到远程的注释必须使用中文
 6. Run from the marketplace root directory
@@ -556,9 +618,10 @@ echo "✅ Synced to local plugins"
 9. Version format: semver (major.minor.patch)
 10. Local paths:
     - Cache: `~/.claude/plugins/cache/android-dev-tools/android-dev-tools/{version}/`
-    - Marketplace: `~/.claude/plugins/marketplaces/android-dev-tools/plugins/android-dev-tools/`
+    - Marketplace: `~/.claude/plugins/marketplaces/android-dev-tools/` (必须是 git clone，不能用 cp 复制)
     - Installed: `~/.claude/plugins/installed_plugins.json`
 11. If push fails, pull and retry before giving up
 12. Clean up old versions to avoid version confusion
 13. Each skill directory must have a README.md generated from its SKILL.md content
 14. README.md files are auto-generated -- edit SKILL.md instead and re-run this skill
+15. **首次安装需要注册 3 个文件** - `settings.json` (enabledPlugins)、`known_marketplaces.json`、`installed_plugins.json`
