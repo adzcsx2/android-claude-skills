@@ -27,28 +27,28 @@ All-in-one Android development toolkit for Claude Code.
 /init-android
 
 # Configure remote signing
-/android-dev-tools:apply-remote-sign
+/adt:apply-remote-sign
 
 # Debug build performance
-/android-dev-tools:gradle-build-performance
+/adt:gradle-build-performance
 
 # Generate documentation
-/android-dev-tools:update-docs
+/adt:update-docs
 
 # Internationalization audit
-/android-dev-tools:android-i18n
+/adt:android-i18n
 
 # Foldable screen adaptation
-/android-dev-tools:android-fold-adapter
+/adt:android-fold-adapter
 
 # Add Chinese comments
-/android-dev-tools:code-note
+/adt:code-note
 
 # UI automation testing
-/android-dev-tools:auto-ui-test
+/adt:auto-ui-test
 
 # Sync and publish plugin updates
-/android-dev-tools:update-remote-plugins
+/adt:update-remote-plugins
 ```
 
 ## Repository Structure

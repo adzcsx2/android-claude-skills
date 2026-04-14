@@ -81,19 +81,19 @@ claude_skill/
 
 | Skill | Description |
 |-------|-------------|
-| `android-dev-tools:init-android` | Initialize or optimize claude.md for Android projects |
-| `android-dev-tools:gradle-build-performance` | Debug and optimize Gradle build performance |
-| `android-dev-tools:update-docs` | Generate Chinese technical documentation |
-| `android-dev-tools:android-i18n` | Audit and generate i18n resources for 4 languages |
-| `android-dev-tools:android-fold-adapter` | Diagnose and fix foldable screen adaptation issues |
-| `android-dev-tools:code-note` | Add Chinese comments to Kotlin/Java source files |
-| `android-dev-tools:auto-ui-test` | Android UI automation testing - Midscene + ADB with doc-driven mode |
-| `android-dev-tools:push` | One-push release: auto-add, pull latest, per-file commit, push with conflict handling |
-| `android-dev-tools:update-remote-plugins` | Audit & generate skill READMEs, sync marketplace, update local plugins |
+| `adt:init-android` | Initialize or optimize claude.md for Android projects |
+| `adt:gradle-build-performance` | Debug and optimize Gradle build performance |
+| `adt:update-docs` | Generate Chinese technical documentation |
+| `adt:android-i18n` | Audit and generate i18n resources for 4 languages |
+| `adt:android-fold-adapter` | Diagnose and fix foldable screen adaptation issues |
+| `adt:code-note` | Add Chinese comments to Kotlin/Java source files |
+| `adt:auto-ui-test` | Android UI automation testing - Midscene + ADB with doc-driven mode |
+| `adt:push` | One-push release: auto-add, pull latest, per-file commit, push with conflict handling |
+| `adt:update-remote-plugins` | Audit & generate skill READMEs, sync marketplace, update local plugins |
 
 ---
 
-## android-dev-tools:init-android
+## adt:init-android
 
 Initialize or optimize claude.md for Android projects. Detect real project structure from Gradle and source folders, merge existing rules, and generate a concise AI guidance file.
 
@@ -106,11 +106,11 @@ Initialize or optimize claude.md for Android projects. Detect real project struc
 - Optional checklist generation (API, dependencies, modules)
 - Auto-add claude.md and checklist docs to .gitignore
 
-**Usage:** `/android-dev-tools:init-android`
+**Usage:** `/adt:init-android`
 
 ---
 
-## android-dev-tools:gradle-build-performance
+## adt:gradle-build-performance
 
 Debug and optimize Android/Gradle build performance.
 
@@ -125,11 +125,11 @@ Debug and optimize Android/Gradle build performance.
 - Debug kapt/KSP annotation processing
 - Groovy DSL and Kotlin DSL examples
 
-**Usage:** `/android-dev-tools:gradle-build-performance`
+**Usage:** `/adt:gradle-build-performance`
 
 ---
 
-## android-dev-tools:update-docs
+## adt:update-docs
 
 Auto-generate Chinese technical documentation for Android projects.
 
@@ -149,12 +149,12 @@ Auto-generate Chinese technical documentation for Android projects.
 
 **Usage:**
 ```bash
-/android-dev-tools:update-docs [--force] [--dry-run] [interfaces|navigation|components|notifications|api]
+/adt:update-docs [--force] [--dry-run] [interfaces|navigation|components|notifications|api]
 ```
 
 ---
 
-## android-dev-tools:code-note
+## adt:code-note
 
 Add Chinese comments to Kotlin/Java source files.
 
@@ -167,16 +167,16 @@ Add Chinese comments to Kotlin/Java source files.
 
 **Usage:**
 ```bash
-/android-dev-tools:code-note 文件名
+/adt:code-note 文件名
 ```
 
 **Examples:**
-- `/android-dev-tools:code-note AlbumActivity`
-- `/android-dev-tools:code-note LoginActivity.kt`
+- `/adt:code-note AlbumActivity`
+- `/adt:code-note LoginActivity.kt`
 
 ---
 
-## android-dev-tools:update-remote-plugins
+## adt:update-remote-plugins
 
 Sync marketplace.json with plugins directory, audit & generate per-skill README.md, and update README files.
 
@@ -189,11 +189,11 @@ Sync marketplace.json with plugins directory, audit & generate per-skill README.
 - Commit and push to remote
 - Sync changes to local Claude Code plugins directory
 
-**Usage:** `/android-dev-tools:update-remote-plugins`
+**Usage:** `/adt:update-remote-plugins`
 
 ---
 
-## android-dev-tools:android-i18n
+## adt:android-i18n
 
 Audit Android project for hardcoded Chinese strings and generate i18n resources.
 
@@ -205,12 +205,12 @@ Audit Android project for hardcoded Chinese strings and generate i18n resources.
 
 **Usage:**
 ```bash
-/android-dev-tools:android-i18n [project_path]
+/adt:android-i18n [project_path]
 ```
 
 ---
 
-## android-dev-tools:android-fold-adapter
+## adt:android-fold-adapter
 
 Diagnose and fix Android foldable screen adaptation issues.
 
@@ -223,12 +223,12 @@ Diagnose and fix Android foldable screen adaptation issues.
 
 **Usage:**
 ```bash
-/android-dev-tools:android-fold-adapter "搜索页折叠后内容消失"
+/adt:android-fold-adapter "搜索页折叠后内容消失"
 ```
 
 ---
 
-## android-dev-tools:auto-ui-test
+## adt:auto-ui-test
 
 Android UI automation testing with intelligent mode selection and doc-driven testing.
 
@@ -242,10 +242,10 @@ Android UI automation testing with intelligent mode selection and doc-driven tes
 **Usage:**
 ```bash
 # Direct execution
-/android-dev-tools:auto-ui-test 点击Toast按钮，等待3秒后截图
+/adt:auto-ui-test 点击Toast按钮，等待3秒后截图
 
 # Doc-driven testing (parse document and execute tests)
-/android-dev-tools:auto-ui-test docs/test/UI_TEST_REPORT.md
+/adt:auto-ui-test docs/test/UI_TEST_REPORT.md
 ```
 
 **Doc-driven Testing:**
@@ -291,7 +291,7 @@ Android UI automation testing with intelligent mode selection and doc-driven tes
 
 ---
 
-## android-dev-tools:push
+## adt:push
 
 One-push release workflow: auto-add all changes, pull latest code, per-file commit, generate update docs, push to remote.
 
@@ -306,10 +306,10 @@ One-push release workflow: auto-add all changes, pull latest code, per-file comm
 **Usage:**
 ```bash
 # Normal push
-/android-dev-tools:push
+/adt:push
 
 # With version (update doc version + create tag)
-/android-dev-tools:push 1.2.2
+/adt:push 1.2.2
 ```
 
 All git commands execute in the user's current working directory.

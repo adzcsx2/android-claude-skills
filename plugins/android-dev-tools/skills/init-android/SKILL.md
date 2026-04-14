@@ -1,5 +1,5 @@
 ---
-name: init-android
+name: adt:init-android
 description: Initialize or optimize claude.md for Android projects. Detect real project structure from Gradle and source folders, merge existing rules such as claude.md and common.mdc, and generate a concise low-token AI guidance file that prioritizes reusing existing architecture, utilities, and coding patterns. Optionally generate minimal verified checklist docs for APIs, dependencies, and modules when explicitly requested. Use when creating or refining Android AI instructions, reducing context tokens, aligning AI behavior with an existing codebase, auditing Android project metadata, or adapting to legacy and mixed Java/Kotlin Android projects.
 ---
 

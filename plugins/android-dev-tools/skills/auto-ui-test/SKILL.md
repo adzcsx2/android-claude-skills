@@ -1,5 +1,5 @@
 ---
-name: auto-ui-test
+name: adt:auto-ui-test
 description: Android UI自动化测试 - Midscene视觉驱动 + ADB快速执行，支持文档驱动测试
 compatibility: darwin, linux
 ---
@@ -435,7 +435,7 @@ adb shell "input text password && input keyevent 66"
 
 ## 相关技能
 
-- `android-dev-tools:android-adb` - ADB基础操作
+- `adt:android-adb` - ADB基础操作
 - `android-device-automation` - Midscene完整文档
 - `ecc:tdd` - 测试驱动开发
 - `ecc:e2e` - 端到端测试

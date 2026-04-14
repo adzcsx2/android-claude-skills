@@ -1,5 +1,5 @@
 ---
-name: android-i18n
+name: adt:android-i18n
 description: Audit Android project for hardcoded Chinese strings, generate i18n resources for 4 languages (en/ru/zh/zh-rTW), and update code to use string resources.
 ---
 
@@ -30,10 +30,10 @@ description: Audit Android project for hardcoded Chinese strings, generate i18n 
 
 ```bash
 # 审计当前目录的 Android 项目
-/android-dev-tools:android-i18n
+/adt:android-i18n
 
 # 审计指定目录的 Android 项目
-/android-dev-tools:android-i18n /path/to/android/project
+/adt:android-i18n /path/to/android/project
 ```
 
 ### 扫描范围

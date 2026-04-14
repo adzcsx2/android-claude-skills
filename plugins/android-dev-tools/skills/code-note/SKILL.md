@@ -1,5 +1,5 @@
 ---
-name: android-dev-tools:code-note
+name: adt:code-note
 description: Add Chinese comments to Kotlin/Java source files. Supports classes, methods, member variables, and key logic blocks. Comments are concise but comprehensive.
 ---
 

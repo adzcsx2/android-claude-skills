@@ -81,19 +81,19 @@ claude_skill/
 
 | Skill | 描述 |
 |-------|------|
-| `android-dev-tools:init-android` | 初始化或优化 Android 项目的 claude.md 文件 |
-| `android-dev-tools:gradle-build-performance` | 调试和优化 Gradle 构建性能 |
-| `android-dev-tools:update-docs` | 生成中文技术文档 |
-| `android-dev-tools:android-i18n` | 审计并生成 4 种语言的国际化资源 |
-| `android-dev-tools:android-fold-adapter` | 诊断和修复折叠屏适配问题 |
-| `android-dev-tools:code-note` | 为 Kotlin/Java 源文件添加中文注释 |
-| `android-dev-tools:auto-ui-test` | Android UI自动化测试 - Midscene视觉驱动 + ADB快速执行，支持文档驱动测试 |
-| `android-dev-tools:push` | 一键发布：自动暂存、拉取最新、逐文件提交、生成文档、推送到远程 |
-| `android-dev-tools:update-remote-plugins` | 审计生成 Skill README，同步 marketplace 并更新本地插件 |
+| `adt:init-android` | 初始化或优化 Android 项目的 claude.md 文件 |
+| `adt:gradle-build-performance` | 调试和优化 Gradle 构建性能 |
+| `adt:update-docs` | 生成中文技术文档 |
+| `adt:android-i18n` | 审计并生成 4 种语言的国际化资源 |
+| `adt:android-fold-adapter` | 诊断和修复折叠屏适配问题 |
+| `adt:code-note` | 为 Kotlin/Java 源文件添加中文注释 |
+| `adt:auto-ui-test` | Android UI自动化测试 - Midscene视觉驱动 + ADB快速执行，支持文档驱动测试 |
+| `adt:push` | 一键发布：自动暂存、拉取最新、逐文件提交、生成文档、推送到远程 |
+| `adt:update-remote-plugins` | 审计生成 Skill README，同步 marketplace 并更新本地插件 |
 
 ---
 
-## android-dev-tools:init-android
+## adt:init-android
 
 初始化或优化 Android 项目的 claude.md 文件。从 Gradle 配置和源码目录检测真实项目结构，合并已有规则，生成简洁的 AI 指导文件。
 
@@ -106,11 +106,11 @@ claude_skill/
 - 可选生成 checklist（API、依赖、模块）
 - 自动将 claude.md 和 checklist 文档添加到 .gitignore
 
-**用法：** `/android-dev-tools:init-android`
+**用法：** `/adt:init-android`
 
 ---
 
-## android-dev-tools:gradle-build-performance
+## adt:gradle-build-performance
 
 调试和优化 Android/Gradle 构建性能。
 
@@ -125,11 +125,11 @@ claude_skill/
 - 调试 kapt/KSP 注解处理
 - Groovy DSL 和 Kotlin DSL 示例
 
-**用法：** `/android-dev-tools:gradle-build-performance`
+**用法：** `/adt:gradle-build-performance`
 
 ---
 
-## android-dev-tools:update-docs
+## adt:update-docs
 
 为 Android 项目自动生成中文技术文档。
 
@@ -149,12 +149,12 @@ claude_skill/
 
 **用法：**
 ```bash
-/android-dev-tools:update-docs [--force] [--dry-run] [interfaces|navigation|components|notifications|api]
+/adt:update-docs [--force] [--dry-run] [interfaces|navigation|components|notifications|api]
 ```
 
 ---
 
-## android-dev-tools:code-note
+## adt:code-note
 
 为 Kotlin/Java 源文件添加中文注释。
 
@@ -167,16 +167,16 @@ claude_skill/
 
 **用法：**
 ```bash
-/android-dev-tools:code-note 文件名
+/adt:code-note 文件名
 ```
 
 **示例：**
-- `/android-dev-tools:code-note AlbumActivity`
-- `/android-dev-tools:code-note LoginActivity.kt`
+- `/adt:code-note AlbumActivity`
+- `/adt:code-note LoginActivity.kt`
 
 ---
 
-## android-dev-tools:update-remote-plugins
+## adt:update-remote-plugins
 
 同步 marketplace.json 与插件目录，审计生成每个 skill 的 README.md，并更新 README 文件。
 
@@ -189,11 +189,11 @@ claude_skill/
 - 提交并推送到远程
 - 同步更新到本地 Claude Code 插件目录
 
-**用法：** `/android-dev-tools:update-remote-plugins`
+**用法：** `/adt:update-remote-plugins`
 
 ---
 
-## android-dev-tools:android-i18n
+## adt:android-i18n
 
 审计 Android 项目中的硬编码中文字符串并生成国际化资源。
 
@@ -205,12 +205,12 @@ claude_skill/
 
 **用法：**
 ```bash
-/android-dev-tools:android-i18n [项目路径]
+/adt:android-i18n [项目路径]
 ```
 
 ---
 
-## android-dev-tools:android-fold-adapter
+## adt:android-fold-adapter
 
 诊断和修复 Android 折叠屏适配问题。
 
@@ -223,12 +223,12 @@ claude_skill/
 
 **用法：**
 ```bash
-/android-dev-tools:android-fold-adapter "搜索页折叠后内容消失"
+/adt:android-fold-adapter "搜索页折叠后内容消失"
 ```
 
 ---
 
-## android-dev-tools:auto-ui-test
+## adt:auto-ui-test
 
 Android UI 自动化测试，智能选择执行模式，支持文档驱动测试。
 
@@ -242,10 +242,10 @@ Android UI 自动化测试，智能选择执行模式，支持文档驱动测试
 **用法：**
 ```bash
 # 直接执行测试任务
-/android-dev-tools:auto-ui-test 点击Toast按钮，等待3秒后截图
+/adt:auto-ui-test 点击Toast按钮，等待3秒后截图
 
 # 文档驱动测试（解析文档并执行测试）
-/android-dev-tools:auto-ui-test docs/test/UI_TEST_REPORT.md
+/adt:auto-ui-test docs/test/UI_TEST_REPORT.md
 ```
 
 **文档驱动测试：**
@@ -291,7 +291,7 @@ Android UI 自动化测试，智能选择执行模式，支持文档驱动测试
 
 ---
 
-## android-dev-tools:push
+## adt:push
 
 一键发布工作流：自动暂存所有变更、拉取最新代码、逐文件提交、生成更新文档、推送到远程仓库。
 
@@ -306,10 +306,10 @@ Android UI 自动化测试，智能选择执行模式，支持文档驱动测试
 **用法：**
 ```bash
 # 普通推送
-/android-dev-tools:push
+/adt:push
 
 # 指定版本号（更新文档版本号 + 创建 tag）
-/android-dev-tools:push 1.2.2
+/adt:push 1.2.2
 ```
 
 所有 git 命令均在用户当前工作目录执行。

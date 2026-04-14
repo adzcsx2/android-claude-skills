@@ -1,5 +1,5 @@
 ---
-name: gradle-build-performance
+name: adt:gradle-build-performance
 description: Debug and optimize Android/Gradle build performance. Use when builds are slow, investigating CI/CD performance, analyzing build scans, or identifying compilation bottlenecks.
 ---
 

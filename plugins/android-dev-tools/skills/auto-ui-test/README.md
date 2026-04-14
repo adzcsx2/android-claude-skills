@@ -27,4 +27,4 @@
 
 环境要求：ADB 已安装、Playground CLI 已启动、Midscene Agent 已集成。
 
-> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/android-dev-tools:update-remote-plugins`。
+> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/adt:update-remote-plugins`。

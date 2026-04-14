@@ -16,11 +16,11 @@
 ## 用法
 
 ```
-/android-dev-tools:android-fold-adapter 描述折叠屏问题
+/adt:android-fold-adapter 描述折叠屏问题
 ```
 
 参数示例：
-- `/android-dev-tools:android-fold-adapter 搜索页折叠后内容消失`
-- `/android-dev-tools:android-fold-adapter 详情页展开后按钮无响应`
+- `/adt:android-fold-adapter 搜索页折叠后内容消失`
+- `/adt:android-fold-adapter 详情页展开后按钮无响应`
 
-> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/android-dev-tools:update-remote-plugins`。
+> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/adt:update-remote-plugins`。

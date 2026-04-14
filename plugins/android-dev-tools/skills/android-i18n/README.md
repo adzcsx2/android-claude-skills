@@ -16,10 +16,10 @@
 
 ```bash
 # 审计当前目录的 Android 项目
-/android-dev-tools:android-i18n
+/adt:android-i18n
 
 # 审计指定目录的 Android 项目
-/android-dev-tools:android-i18n /path/to/android/project
+/adt:android-i18n /path/to/android/project
 ```
 
-> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/android-dev-tools:update-remote-plugins`。
+> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/adt:update-remote-plugins`。

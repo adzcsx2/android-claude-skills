@@ -23,4 +23,4 @@
 
 适用于：新项目初始化 AI 规则文件、现有项目 claude.md 瘦身降 token、AI 理解跑偏需要纠偏、旧项目/混合语言项目适配。
 
-> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/android-dev-tools:update-remote-plugins`。
+> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/adt:update-remote-plugins`。

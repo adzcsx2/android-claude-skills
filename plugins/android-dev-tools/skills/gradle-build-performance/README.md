@@ -16,7 +16,7 @@
 ## 用法
 
 ```
-/android-dev-tools:gradle-build-performance
+/adt:gradle-build-performance
 ```
 
 使用场景示例：
@@ -25,4 +25,4 @@
 - "为什么配置阶段耗时这么长？"
 - "怎么启用 Configuration Cache？"
 
-> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/android-dev-tools:update-remote-plugins`。
+> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/adt:update-remote-plugins`。

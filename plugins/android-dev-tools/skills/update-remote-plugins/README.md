@@ -1,4 +1,4 @@
-# android-dev-tools:update-remote-plugins
+# adt:update-remote-plugins
 
 审计并生成每个 skill 的 README.md，同步 marketplace.json、plugin.json 和 README 文件，然后提交推送到远程仓库，并同步到本地 Claude Code 插件目录。
 
@@ -20,9 +20,9 @@
 ## 用法
 
 ```
-/android-dev-tools:update-remote-plugins
+/adt:update-remote-plugins
 ```
 
 在修改了 `plugins/` 目录下的任何 skill 后运行，用于发布新版本或同步文档。
 
-> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/android-dev-tools:update-remote-plugins`。
+> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/adt:update-remote-plugins`。

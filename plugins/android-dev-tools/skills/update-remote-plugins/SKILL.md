@@ -1,5 +1,5 @@
 ---
-name: android-dev-tools:update-remote-plugins
+name: adt:update-remote-plugins
 description: Audit and generate per-skill README.md, sync marketplace.json, plugin.json, and README files, then commit and push to remote. Also syncs changes to local Claude Code plugins directory.
 ---
 
@@ -27,7 +27,7 @@ Audit and generate per-skill README.md files, sync marketplace.json with plugins
 ## Trigger
 
 ```
-/android-dev-tools:update-remote-plugins
+/adt:update-remote-plugins
 ```
 
 ---
@@ -136,7 +136,7 @@ done
 
 ---
 
-> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/android-dev-tools:update-remote-plugins`。
+> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/adt:update-remote-plugins`。
 ```
 
 **关键规则：**

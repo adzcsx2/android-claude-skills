@@ -1,5 +1,5 @@
 ---
-name: android-fold-adapter
+name: adt:android-fold-adapter
 description: "Diagnose and fix Android foldable screen adaptation issues — Activity recreation, state loss, fragment reference invalidation, and layout breakage on fold/unfold."
 argument-hint: Describe the foldable screen issue (e.g., "搜索页折叠后内容消失", "详情页展开后按钮无响应")
 applyTo: "**/*.kt, **/*.java, **/AndroidManifest.xml"
@@ -24,7 +24,7 @@ This skill supports automatic updates. When solving a new foldable screen issue:
 1. Apply the fix using the patterns below
 2. If the fix involves a new pattern not covered here, update this SKILL.md file
 3. Add the new issue to "Known Issues Archive" section
-4. Run `/android-dev-tools:update-remote-plugins` to sync changes
+4. Run `/adt:update-remote-plugins` to sync changes
 
 ## Diagnosis Workflow
 

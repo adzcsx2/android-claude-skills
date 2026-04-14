@@ -1,4 +1,4 @@
-# android-dev-tools:code-note
+# adt:code-note
 
 为 Android 项目的 Kotlin/Java 源文件添加中文注释，支持类、方法、成员变量和关键逻辑块，注释简洁但全面。
 
@@ -21,4 +21,4 @@
 
 参数为要添加注释的文件名，支持带或不带扩展名。如匹配到多个文件，会列出供选择。
 
-> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/android-dev-tools:update-remote-plugins`。
+> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/adt:update-remote-plugins`。

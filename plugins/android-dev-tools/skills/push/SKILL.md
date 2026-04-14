@@ -1,5 +1,5 @@
 ---
-name: android-dev-tools:push
+name: adt:push
 description: "One-push release workflow: auto git add all changes, pull latest, per-file commit, generate docs, push to remote with optional tag."
 argument-hint: "[version] 例如 /push 1.2.2"
 ---
@@ -28,8 +28,8 @@ argument-hint: "[version] 例如 /push 1.2.2"
 
 ## Example Prompts
 
-- `/android-dev-tools:push` - 自动暂存所有变更，逐文件提交，生成文档，推送到远程
-- `/android-dev-tools:push 1.2.2` - 更新文档版本号到 1.2.2，提交并打 tag
+- `/adt:push` - 自动暂存所有变更，逐文件提交，生成文档，推送到远程
+- `/adt:push 1.2.2` - 更新文档版本号到 1.2.2，提交并打 tag
 
 ---
 
@@ -123,7 +123,7 @@ git rebase --continue
 2. 显示冲突详情（哪些文件、冲突内容摘要）
 3. 提示用户手动解决冲突
 4. 用户解决后，执行 `git add <resolved files>` + `git rebase --continue`
-5. 重新执行 `/android-dev-tools:push` 继续剩余流程
+5. 重新执行 `/adt:push` 继续剩余流程
 
 ```bash
 # 用户手动解决冲突后，执行：
@@ -131,7 +131,7 @@ git add <resolved files>
 git rebase --continue
 
 # 然后重新执行：
-/android-dev-tools:push
+/adt:push
 ```
 
 ### Step 2: Parse Arguments
@@ -261,7 +261,7 @@ git pull --rebase $REMOTE $BRANCH
 
 - **如果 rebase 无冲突** → 直接 `git push origin HEAD`
 - **如果有简单冲突** → 自动解决（参见 Step 1 的冲突处理策略）
-- **如果有复杂冲突** → 停止，提示用户手动处理冲突，执行 `/android-dev-tools:push` 重新推送
+- **如果有复杂冲突** → 停止，提示用户手动处理冲突，执行 `/adt:push` 重新推送
 
 **创建 Tag（仅当提供了版本号时）**：
 

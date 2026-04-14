@@ -1,4 +1,4 @@
-# android-dev-tools:update-docs
+# adt:update-docs
 
 Android 项目文档自动生成工具，分析项目结构，生成中文技术文档，支持增量更新。
 
@@ -18,13 +18,13 @@ Android 项目文档自动生成工具，分析项目结构，生成中文技术
 
 ```bash
 # 增量更新所有文档
-/android-dev-tools:update-docs
+/adt:update-docs
 
 # 强制重新生成所有文档
-/android-dev-tools:update-docs --force
+/adt:update-docs --force
 
 # 仅生成界面文档
-/android-dev-tools:update-docs interfaces
+/adt:update-docs interfaces
 ```
 
-> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/android-dev-tools:update-remote-plugins`。
+> 本文档由 SKILL.md 自动生成，请勿手动编辑。如需更新，修改 SKILL.md 后运行 `/adt:update-remote-plugins`。
