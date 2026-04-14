@@ -1,5 +1,5 @@
 ---
-name: push
+name: android-dev-tools:push
 description: "One-push release workflow: auto git add all changes, pull latest, per-file commit, generate docs, push to remote with optional tag."
 argument-hint: "[version] 例如 /push 1.2.2"
 ---

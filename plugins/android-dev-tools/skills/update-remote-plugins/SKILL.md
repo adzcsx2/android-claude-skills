@@ -1,5 +1,5 @@
 ---
-name: update-remote-plugins
+name: android-dev-tools:update-remote-plugins
 description: Audit and generate per-skill README.md, sync marketplace.json, plugin.json, and README files, then commit and push to remote. Also syncs changes to local Claude Code plugins directory.
 ---
 

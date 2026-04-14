@@ -81,19 +81,19 @@ claude_skill/
 
 | Skill | 描述 |
 |-------|------|
-| `init-android` | 初始化或优化 Android 项目的 claude.md 文件 |
-| `gradle-build-performance` | 调试和优化 Gradle 构建性能 |
-| `update-docs` | 生成中文技术文档 |
-| `android-i18n` | 审计并生成 4 种语言的国际化资源 |
-| `android-fold-adapter` | 诊断和修复折叠屏适配问题 |
-| `code-note` | 为 Kotlin/Java 源文件添加中文注释 |
-| `auto-ui-test` | Android UI自动化测试 - Midscene视觉驱动 + ADB快速执行，支持文档驱动测试 |
-| `push` | 一键发布：自动暂存、拉取最新、逐文件提交、生成文档、推送到远程 |
-| `update-remote-plugins` | 审计生成 Skill README，同步 marketplace 并更新本地插件 |
+| `android-dev-tools:init-android` | 初始化或优化 Android 项目的 claude.md 文件 |
+| `android-dev-tools:gradle-build-performance` | 调试和优化 Gradle 构建性能 |
+| `android-dev-tools:update-docs` | 生成中文技术文档 |
+| `android-dev-tools:android-i18n` | 审计并生成 4 种语言的国际化资源 |
+| `android-dev-tools:android-fold-adapter` | 诊断和修复折叠屏适配问题 |
+| `android-dev-tools:code-note` | 为 Kotlin/Java 源文件添加中文注释 |
+| `android-dev-tools:auto-ui-test` | Android UI自动化测试 - Midscene视觉驱动 + ADB快速执行，支持文档驱动测试 |
+| `android-dev-tools:push` | 一键发布：自动暂存、拉取最新、逐文件提交、生成文档、推送到远程 |
+| `android-dev-tools:update-remote-plugins` | 审计生成 Skill README，同步 marketplace 并更新本地插件 |
 
 ---
 
-## init-android
+## android-dev-tools:init-android
 
 初始化或优化 Android 项目的 claude.md 文件。从 Gradle 配置和源码目录检测真实项目结构，合并已有规则，生成简洁的 AI 指导文件。
 
@@ -110,7 +110,7 @@ claude_skill/
 
 ---
 
-## gradle-build-performance
+## android-dev-tools:gradle-build-performance
 
 调试和优化 Android/Gradle 构建性能。
 
@@ -129,7 +129,7 @@ claude_skill/
 
 ---
 
-## update-docs
+## android-dev-tools:update-docs
 
 为 Android 项目自动生成中文技术文档。
 
@@ -154,7 +154,7 @@ claude_skill/
 
 ---
 
-## code-note
+## android-dev-tools:code-note
 
 为 Kotlin/Java 源文件添加中文注释。
 
@@ -176,7 +176,7 @@ claude_skill/
 
 ---
 
-## update-remote-plugins
+## android-dev-tools:update-remote-plugins
 
 同步 marketplace.json 与插件目录，审计生成每个 skill 的 README.md，并更新 README 文件。
 
@@ -193,7 +193,7 @@ claude_skill/
 
 ---
 
-## android-i18n
+## android-dev-tools:android-i18n
 
 审计 Android 项目中的硬编码中文字符串并生成国际化资源。
 
@@ -210,7 +210,7 @@ claude_skill/
 
 ---
 
-## android-fold-adapter
+## android-dev-tools:android-fold-adapter
 
 诊断和修复 Android 折叠屏适配问题。
 
@@ -228,7 +228,7 @@ claude_skill/
 
 ---
 
-## auto-ui-test
+## android-dev-tools:auto-ui-test
 
 Android UI 自动化测试，智能选择执行模式，支持文档驱动测试。
 
@@ -291,7 +291,7 @@ Android UI 自动化测试，智能选择执行模式，支持文档驱动测试
 
 ---
 
-## push
+## android-dev-tools:push
 
 一键发布工作流：自动暂存所有变更、拉取最新代码、逐文件提交、生成更新文档、推送到远程仓库。
 

@@ -81,19 +81,19 @@ claude_skill/
 
 | Skill | Description |
 |-------|-------------|
-| `init-android` | Initialize or optimize claude.md for Android projects |
-| `gradle-build-performance` | Debug and optimize Gradle build performance |
-| `update-docs` | Generate Chinese technical documentation |
-| `android-i18n` | Audit and generate i18n resources for 4 languages |
-| `android-fold-adapter` | Diagnose and fix foldable screen adaptation issues |
-| `code-note` | Add Chinese comments to Kotlin/Java source files |
-| `auto-ui-test` | Android UI automation testing - Midscene + ADB with doc-driven mode |
-| `push` | One-push release: auto-add, pull latest, per-file commit, push with conflict handling |
-| `update-remote-plugins` | Audit & generate skill READMEs, sync marketplace, update local plugins |
+| `android-dev-tools:init-android` | Initialize or optimize claude.md for Android projects |
+| `android-dev-tools:gradle-build-performance` | Debug and optimize Gradle build performance |
+| `android-dev-tools:update-docs` | Generate Chinese technical documentation |
+| `android-dev-tools:android-i18n` | Audit and generate i18n resources for 4 languages |
+| `android-dev-tools:android-fold-adapter` | Diagnose and fix foldable screen adaptation issues |
+| `android-dev-tools:code-note` | Add Chinese comments to Kotlin/Java source files |
+| `android-dev-tools:auto-ui-test` | Android UI automation testing - Midscene + ADB with doc-driven mode |
+| `android-dev-tools:push` | One-push release: auto-add, pull latest, per-file commit, push with conflict handling |
+| `android-dev-tools:update-remote-plugins` | Audit & generate skill READMEs, sync marketplace, update local plugins |
 
 ---
 
-## init-android
+## android-dev-tools:init-android
 
 Initialize or optimize claude.md for Android projects. Detect real project structure from Gradle and source folders, merge existing rules, and generate a concise AI guidance file.
 
@@ -110,7 +110,7 @@ Initialize or optimize claude.md for Android projects. Detect real project struc
 
 ---
 
-## gradle-build-performance
+## android-dev-tools:gradle-build-performance
 
 Debug and optimize Android/Gradle build performance.
 
@@ -129,7 +129,7 @@ Debug and optimize Android/Gradle build performance.
 
 ---
 
-## update-docs
+## android-dev-tools:update-docs
 
 Auto-generate Chinese technical documentation for Android projects.
 
@@ -154,7 +154,7 @@ Auto-generate Chinese technical documentation for Android projects.
 
 ---
 
-## code-note
+## android-dev-tools:code-note
 
 Add Chinese comments to Kotlin/Java source files.
 
@@ -176,7 +176,7 @@ Add Chinese comments to Kotlin/Java source files.
 
 ---
 
-## update-remote-plugins
+## android-dev-tools:update-remote-plugins
 
 Sync marketplace.json with plugins directory, audit & generate per-skill README.md, and update README files.
 
@@ -193,7 +193,7 @@ Sync marketplace.json with plugins directory, audit & generate per-skill README.
 
 ---
 
-## android-i18n
+## android-dev-tools:android-i18n
 
 Audit Android project for hardcoded Chinese strings and generate i18n resources.
 
@@ -210,7 +210,7 @@ Audit Android project for hardcoded Chinese strings and generate i18n resources.
 
 ---
 
-## android-fold-adapter
+## android-dev-tools:android-fold-adapter
 
 Diagnose and fix Android foldable screen adaptation issues.
 
@@ -228,7 +228,7 @@ Diagnose and fix Android foldable screen adaptation issues.
 
 ---
 
-## auto-ui-test
+## android-dev-tools:auto-ui-test
 
 Android UI automation testing with intelligent mode selection and doc-driven testing.
 
@@ -291,7 +291,7 @@ Android UI automation testing with intelligent mode selection and doc-driven tes
 
 ---
 
-## push
+## android-dev-tools:push
 
 One-push release workflow: auto-add all changes, pull latest code, per-file commit, generate update docs, push to remote.
 

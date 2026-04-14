@@ -1,4 +1,4 @@
-# update-remote-plugins
+# android-dev-tools:update-remote-plugins
 
 审计并生成每个 skill 的 README.md，同步 marketplace.json、plugin.json 和 README 文件，然后提交推送到远程仓库，并同步到本地 Claude Code 插件目录。
 

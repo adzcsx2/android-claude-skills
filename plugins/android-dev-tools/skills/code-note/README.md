@@ -1,4 +1,4 @@
-# code-note
+# android-dev-tools:code-note
 
 为 Android 项目的 Kotlin/Java 源文件添加中文注释，支持类、方法、成员变量和关键逻辑块，注释简洁但全面。
 

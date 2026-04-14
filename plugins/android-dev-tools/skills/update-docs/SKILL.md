@@ -1,5 +1,5 @@
 ---
-name: update-docs
+name: android-dev-tools:update-docs
 description: Auto-generate Chinese technical documentation for Android projects. Analyzes structure, generates interfaces, navigation, components, notifications, and API docs. Also migrates root md files to docs/ and updates README with quick links.
 ---
 

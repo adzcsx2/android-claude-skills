@@ -1,4 +1,4 @@
-# update-docs
+# android-dev-tools:update-docs
 
 Android 项目文档自动生成工具，分析项目结构，生成中文技术文档，支持增量更新。
 
